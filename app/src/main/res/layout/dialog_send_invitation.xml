@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+    <LinearLayout
+        android:layout_width="300dp"
+        android:layout_height="250dp"
+        android:orientation="vertical"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/border_dialog"
+        android:layout_centerVertical="true">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:background="@color/colorPrimary"
+            >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/txt_to"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:textStyle="bold"
+            android:layout_gravity="center_vertical"
+            />
+        <TextView
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nguyen Chi"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:layout_gravity="center_vertical"
+            android:id="@+id/tvTitle"
+            />
+        </LinearLayout>
+        <EditText
+            android:padding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:text="@string/txt_invitation_msg_example"
+            android:textAppearance="?android:textAppearanceSmall"
+            android:background="@android:color/transparent"
+            android:id="@+id/etInvitationMsg"
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/lSendMsgAndRemoveFriend"
+            android:orientation="horizontal"
+
+            >
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/txt_send_message"
+                android:textColor="@android:color/white"
+                android:textSize="10sp"
+                android:textAllCaps="false"
+                android:layout_margin="10dp"
+                android:id="@+id/btOK"
+                android:background="@drawable/border_button_positive"
+                />
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="@string/txt_cancel"
+                android:id="@+id/btCancel"
+                android:textColor="@android:color/white"
+                android:textSize="10sp"
+                android:background="@drawable/border_button_positive"
+                android:textAllCaps="false"
+                android:layout_margin="10dp"
+
+                />
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

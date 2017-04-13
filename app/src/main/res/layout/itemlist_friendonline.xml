@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="280dp"
+    android:layout_height="40dp">
+    <FrameLayout
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        >
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_margin="2.5dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            app:civ_border_width="1dp"
+            app:civ_border_color="@android:color/white"
+            android:id="@+id/avatar_friend"
+            android:src="@color/md_yellow_200"/>
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="11dp"
+            android:layout_height="11dp"
+            app:civ_border_color="@android:color/white"
+            app:civ_border_width="0.6dp"
+            android:layout_marginTop="28dp"
+            android:layout_marginLeft="28dp"
+            android:src="@color/md_green_400"
+            />
+    </FrameLayout>
+    <TextView
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="15dp"
+        android:layout_width="160dp"
+        android:layout_height="match_parent"
+        android:text="Trần Văn Trường"
+        android:textSize="14dp"
+        android:textColor="@color/md_black_1000"
+        android:gravity="center_vertical"
+        android:id="@+id/fullname_friend"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="5dp"
+        android:text="2 giờ"
+        android:gravity="center_vertical"
+        android:textColor="#403e3e"
+        android:id="@+id/timelatest"
+        android:visibility="gone"
+        />
+
+</LinearLayout>

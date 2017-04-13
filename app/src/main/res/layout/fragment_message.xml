@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="#38851f"
+            android:layout_centerVertical="true"
+            android:layout_alignParentTop="true"
+            >
+            <RadioGroup android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:orientation="horizontal"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/border_rg"
+                android:padding="1.6dp"
+                >
+                <RadioButton
+                    android:id="@+id/rbPrivateChat"
+                    android:layout_width="100dp"
+                    android:layout_height="30dp"
+                    android:gravity="center"
+                    android:text="@string/txt_private_chat"
+                    android:textAllCaps="false"
+                    android:background="@drawable/border_message_tab"
+                    android:button="@null"
+                    android:checked="true"
+                    />
+                <RadioButton
+                    android:button="@null"
+                    android:id="@+id/rbGroupChat"
+                    android:layout_width="100dp"
+                    android:textAllCaps="false"
+                    android:layout_height="30dp"
+                    android:gravity="center"
+                    android:background="@drawable/border_message_tab"
+                    android:text="@string/txt_group_chat"/>
+            </RadioGroup>
+
+
+        </RelativeLayout>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:background="#f6f6f6">
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/lvPrivateChat"
+                android:background="#f6f6f6"
+
+                />
+
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/lvGroupChat"
+                android:visibility="gone" />
+        </FrameLayout>
+    </LinearLayout>
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/civ_float_button"
+        android:src="@drawable/drop_shadow_floating_button"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="30dp"
+        android:layout_marginRight="30dp"
+        />
+</RelativeLayout>

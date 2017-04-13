@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorGreenBackground">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="bottom">
+
+        <TextView
+            android:id="@+id/tv_appName"
+            android:text="@string/name_app"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="@android:color/white"
+            android:textSize="45sp"/>
+
+        <TextView
+            android:id="@+id/tv_slogan"
+            android:text="@string/slogan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="@android:color/white"
+            android:textSize="13sp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <FrameLayout
+            android:layout_marginTop="70dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/ln_fb"
+                android:layout_width="200dp"
+                android:layout_height="40dp"
+                android:background="@drawable/bg_shadow_bt_login"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_marginLeft="8dp"
+                    android:layout_width="@dimen/button_login_with_height"
+                    android:layout_height="@dimen/button_login_with_height"
+                    android:src="@drawable/fb_logo"/>
+
+                <TextView
+                    android:paddingLeft="10dp"
+                    android:gravity="left"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="@string/login_fb"
+                    android:textSize="15sp"
+                    android:textColor="@color/colorBlueOfFb"/>
+
+            </LinearLayout>
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/ln_gg"
+            android:layout_marginTop="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="200dp"
+                android:layout_height="40dp"
+                android:background="@drawable/bg_shadow_bt_login"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_marginLeft="8dp"
+                    android:id="@+id/btGoogle"
+                    android:layout_width="@dimen/button_login_with_height"
+                    android:layout_height="@dimen/button_login_with_height"
+                    android:src="@drawable/google_logo"/>
+
+                <TextView
+                    android:paddingLeft="10dp"
+                    android:gravity="left"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="@string/login_gg"
+                    android:textSize="15sp"
+                    android:textColor="@color/colorRedOfGg"/>
+
+            </LinearLayout>
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_marginTop="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/ln_tw"
+                android:layout_width="200dp"
+                android:layout_height="40dp"
+                android:background="@drawable/bg_shadow_bt_login"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_marginLeft="8dp"
+                    android:layout_width="@dimen/button_login_with_height"
+                    android:layout_height="@dimen/button_login_with_height"
+                    android:src="@drawable/twitter_logo"/>
+
+                <TextView
+                    android:paddingLeft="10dp"
+                    android:gravity="left"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="@string/login_tw"
+                    android:textSize="15sp"
+                    android:textColor="@color/colorBlueOfTwitter"/>
+
+            </LinearLayout>
+
+        </FrameLayout>
+
+
+
+
+
+    </LinearLayout>
+
+</LinearLayout>

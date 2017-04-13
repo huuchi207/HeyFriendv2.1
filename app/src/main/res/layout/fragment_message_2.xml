@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.percent.PercentRelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.astuetz.PagerSlidingTabStrip
+        android:id="@+id/tab_main_pager_sliding"
+        android:layout_width="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        app:layout_heightPercent="10%"
+        app:layout_marginBottomPercent="0.5%"
+        app:layout_widthPercent="100%"
+        app:pstsIndicatorColor="@android:color/white"
+        app:pstsIndicatorHeight="1dp"
+        app:pstsShouldExpand="true" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_below="@id/tab_main_pager_sliding" />
+
+</android.support.percent.PercentRelativeLayout>

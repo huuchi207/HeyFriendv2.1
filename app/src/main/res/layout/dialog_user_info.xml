@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent">
+    >
+    <RelativeLayout
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="10dp"
+        android:background="@android:color/transparent">
+        >
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:background="@android:color/transparent">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@android:color/transparent"
+                android:layout_alignParentTop="true">
+
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_centerVertical="true"
+                android:background="@color/colorPrimary"
+                >
+
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_alignParentBottom="true"
+                android:background="@color/colorPrimary">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:text="Nguyen Chi"
+                    android:layout_marginBottom="10dp"
+                    android:layout_centerHorizontal="true"
+                    android:id="@+id/tvUsername"
+                    android:textAppearance="?android:attr/textAppearanceLarge"/>
+            </RelativeLayout>
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imvProfileImage"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/com_facebook_button_icon"
+                app:civ_border_color="@android:color/white"
+                app:civ_border_width="2dp"
+
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical"
+            android:background="@drawable/border_dialog"
+            >
+            <TableLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal">
+
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="50dp"
+                        android:text="@string/txt_date_of_birth"
+                        android:textAppearance="?android:textAppearanceSmall"
+                        android:layout_gravity="center_vertical"
+                        android:gravity="center_vertical"
+                        android:layout_marginRight="20dp"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="50dp"
+                        android:text="20/07/1996"
+                        android:gravity="center_vertical"
+                        android:textAppearance="?android:textAppearanceSmall"
+                        android:layout_gravity="center_vertical"
+                        android:id="@+id/tvDateOfBirth"
+                        />
+
+                </TableRow>
+
+
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="50dp"
+                        android:gravity="center_vertical"
+                        android:text="@string/txt_gender"
+                        android:textAppearance="?android:textAppearanceSmall"
+
+                        android:layout_gravity="center_vertical"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="50dp"
+                        android:text="@string/txt_female"
+                        android:textAppearance="?android:textAppearanceSmall"
+                        android:layout_gravity="center_vertical"
+                        android:id="@+id/tvGender"
+                        android:gravity="center_vertical"
+                        />
+                </TableRow>
+
+            </TableLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                >
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/lSendFriendRequest"
+                    android:orientation="horizontal"
+                    android:visibility="gone"
+                    >
+                    <Button
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:text="@string/txt_send_friend_request"
+                        android:textSize="10sp"
+                        android:textAllCaps="false"
+                        android:layout_gravity="center_vertical"
+                        android:id="@+id/btSendFriendRequest"
+                        android:textColor="@android:color/white"
+                        android:background="@drawable/border_button_positive"
+                        />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/lSendMsgAndRemoveFriend"
+                    android:orientation="horizontal"
+
+                    >
+                    <Button
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="@string/txt_send_message"
+                        android:textColor="@android:color/white"
+                        android:textSize="10sp"
+                        android:textAllCaps="false"
+                        android:layout_margin="10dp"
+                        android:id="@+id/btSendMessage"
+                        android:background="@drawable/border_button_positive"
+                        />
+                    <Button
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="@string/txt_remove_friend"
+                        android:id="@+id/btRemoveFriend"
+                        android:textColor="@android:color/white"
+                        android:textSize="10sp"
+                        android:background="@drawable/border_button_positive"
+                        android:textAllCaps="false"
+                        android:layout_margin="10dp"
+
+                        />
+                </LinearLayout>
+            </FrameLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
+
+</RelativeLayout>
