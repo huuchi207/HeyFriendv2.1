@@ -1,13 +1,15 @@
 package com.chi.heyfriendv21.activity;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.chi.heyfriendv21.R;
@@ -40,6 +42,8 @@ import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
+import org.w3c.dom.Text;
+
 import common.Constant;
 import io.fabric.sdk.android.Fabric;
 import object.User;
@@ -56,8 +60,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public static final String TAG="LoginActivity";
     public FirebaseUser currentUser;
     private DatabaseReference mDatabaseReference;
-    private Button btFacebook, btGoogle;
+    private LinearLayout btFacebook, btTwitter;
     private FirebaseAuth.AuthStateListener mAuthListener;
+
+    private TextView tvAppName;
+    private TextView tvSlogan;
 
     // Note: Your consumer key and secret should be obfuscated in your source code before shipping.
     private static final String TWITTER_KEY = "1rvHQJPjgVu4dFfJ2KvWVAUpO";
@@ -98,15 +105,23 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_login);
 
         //initiate component
-        loginWithFacebookButton = (LoginButton) findViewById(R.id.realLoginFacebookButton);
+        loginWithFacebookButton = (LoginButton) findViewById(R.id.realFacebookLoginButton);
         loginWithFacebookButton.setReadPermissions("email");
-        loginWithTwitterButton = (TwitterLoginButton) findViewById(R.id.realLoginTwitterButton);
-        btFacebook = (Button) findViewById(R.id.btFacebook);
-        btGoogle = (Button) findViewById(R.id.btGoogle);
+        loginWithTwitterButton = (TwitterLoginButton) findViewById(R.id.realTwitterLoginButton);
+        btFacebook = (LinearLayout) findViewById(R.id.ln_fb);
+        btTwitter = (LinearLayout) findViewById(R.id.ln_tw);
+
+        tvAppName = (TextView) findViewById(R.id.tv_appName);
+        tvSlogan = (TextView) findViewById(R.id.tv_slogan);
+
+        Typeface fontAppName = Typeface.createFromAsset(getAssets(), "fonts/CapricaScriptUprightPersonalUse.ttf");
+        Typeface fontSlogan = Typeface.createFromAsset(getAssets(), "fonts/SF-UI-Text-Light.ttf");
+        tvAppName.setTypeface(fontAppName);
+        tvSlogan.setTypeface(fontSlogan);
         //register onClickListener
         btFacebook.setOnClickListener(this);
         loginWithFacebookButton.setOnClickListener(this);
-        btGoogle.setOnClickListener(this);
+        btTwitter.setOnClickListener(this);
         loginWithTwitterButton.setOnClickListener(this);
         // Callback registration
         loginWithFacebookButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
@@ -154,10 +169,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
 
         if (v == btFacebook) {
-            Toast.makeText(this, "Clicked", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "Clicked", Toast.LENGTH_SHORT).show();
             loginWithFacebookButton.performClick();
         }
-        if (v==btGoogle){
+        if (v== btTwitter){
             loginWithTwitterButton.performClick();
         }
     }
@@ -217,10 +232,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 }
 //                     update info
 //                    registerNewLocation(uid);
-//                    User userToWrite= new User(uid, email, name, photoUrl, true);
-//                    Intent updateInfo = new Intent(LoginActivity.this, EditInforActivity.class);
-//                    updateInfo.putExtra(Constant.USER, userToWrite);
-//                    startActivity(updateInfo);
+                    User userToWrite= new User(uid, email, name, photoUrl, true);
+                    Intent updateInfo = new Intent(LoginActivity.this, EditInforActivity.class);
+                    updateInfo.putExtra(Constant.USER, userToWrite);
+                    startActivity(updateInfo);
 
 
             }

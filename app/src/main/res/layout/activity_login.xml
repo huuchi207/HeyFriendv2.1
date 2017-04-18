@@ -70,7 +70,11 @@
                     android:textColor="@color/colorBlueOfFb"/>
 
             </LinearLayout>
-
+            <com.facebook.login.widget.LoginButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/realFacebookLoginButton"
+                android:visibility="gone"/>
         </FrameLayout>
 
         <FrameLayout
@@ -84,7 +88,8 @@
                 android:layout_height="40dp"
                 android:background="@drawable/bg_shadow_bt_login"
                 android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:visibility="gone">
 
                 <ImageView
                     android:layout_marginLeft="8dp"
@@ -104,7 +109,11 @@
                     android:textColor="@color/colorRedOfGg"/>
 
             </LinearLayout>
-
+            <com.twitter.sdk.android.core.identity.TwitterLoginButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/realTwitterLoginButton"
+                android:visibility="gone"/>
         </FrameLayout>
 
         <FrameLayout
