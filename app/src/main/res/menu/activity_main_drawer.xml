@@ -5,19 +5,19 @@
 
         <item
             android:id="@+id/nav_timeline"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/settings1"
             android:title="Timeline" />
         <item
             android:id="@+id/nav_conversation"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/sms_unpressed_icon"
             android:title="Conversations" />
         <item
             android:id="@+id/nav_invitation"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/chatgroup_unpressed_icon"
             android:title="Invitation" />
         <item
             android:id="@+id/nav_setting"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/setting_unpressed_icon"
             android:title="Setting" />
     </group>
 

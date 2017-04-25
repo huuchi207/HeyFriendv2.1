@@ -14,10 +14,6 @@ import com.tokenautocomplete.TokenCompleteTextView;
 import object.Tag;
 
 
-/**
- * Created by root on 12/11/2016.
- */
-
 public class ContactCompletionView extends TokenCompleteTextView<Tag> {
     public ContactCompletionView(Context context, AttributeSet attrs) {
         super(context, attrs);

@@ -25,9 +25,7 @@ import common.MessageViewHolder;
 import object.GroupChatData;
 import object.Message;
 
-/**
- * Created by root on 10/11/2016.
- */
+
 
 public class GroupMessagesForRecyclerViewAdapter extends FirebaseRecyclerAdapter<Message,MessageViewHolder> {
 

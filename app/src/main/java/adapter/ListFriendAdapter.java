@@ -16,9 +16,7 @@ import common.CommonMethod;
 import de.hdodenhof.circleimageview.CircleImageView;
 import object.User;
 
-/**
- * Created by Tran Truong on 11/8/2016.
- */
+
 
 public class ListFriendAdapter extends BaseAdapter {
     private Activity context;

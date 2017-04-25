@@ -3,151 +3,159 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="10dp"
-        android:id="@+id/user">
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:layout_marginTop="20dp"
-            android:id="@+id/profile_image"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            app:civ_border_width="0.5dp"
-            app:civ_border_color="@color/colorPrimary"
-            app:civ_border_overlay="true"
-            android:src="@drawable/camera_icon"
-            android:layout_gravity="center_horizontal"
-
-            />
-
-        <TextView
-            android:layout_marginTop="30dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/tvUserName"
-            android:text="Kitaro"
-            android:textColor="#342b2b"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center"
-            android:textStyle="bold"
-            android:textAppearance="?android:textAppearanceLarge"
-            />
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:orientation="vertical"
-        android:id="@+id/invite"
-        android:layout_below="@+id/user"
-        android:layout_centerHorizontal="true">
-
-        <LinearLayout
-            android:layout_width="@dimen/st_lbt_bt_with"
-            android:layout_height="@dimen/st_lbt_height"
-            android:orientation="horizontal"
-            >
-
-            <Button
-                android:paddingLeft="10dp"
-                android:paddingBottom="5dp"
-                android:paddingTop="5dp"
-                android:layout_width="@dimen/st_lbt_bt_with"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/invite_friend_facebook"
-                android:textAppearance="?android:textAppearanceMedium"
-                android:id="@+id/tvInviteFriendFacebook"
-                android:textStyle="normal"
-                android:textColor="@color/com_facebook_blue"
-                android:background="@drawable/bt_if_facebook"
-                android:drawableLeft="@drawable/ic_invite_facebook"
-                android:gravity="center_vertical"
-                android:layout_gravity="center"
-                />
+                android:orientation="vertical"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="10dp"
+                android:id="@+id/user">
 
-        </LinearLayout>
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:layout_marginTop="20dp"
+                    android:id="@+id/profile_image"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    app:civ_border_width="0.5dp"
+                    app:civ_border_color="@color/colorPrimary"
+                    app:civ_border_overlay="true"
+                    android:src="@drawable/camera_icon"
+                    android:layout_gravity="center_horizontal"
 
-        <LinearLayout
-            android:layout_width="@dimen/st_lbt_bt_with"
-            android:layout_height="@dimen/st_lbt_height"
-            android:orientation="horizontal"
-            android:layout_marginTop="20dp"
-            >
+                    />
 
-            <Button
-                android:paddingLeft="10dp"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
-                android:layout_width="@dimen/st_lbt_bt_with"
+                <TextView
+                    android:layout_marginTop="30dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvUserName"
+                    android:text="Kitaro"
+                    android:textColor="#342b2b"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:textAppearance="?android:textAppearanceLarge"
+                    />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/invite_friend_twitter"
-                android:id="@+id/tvInviteFriendTwitter"
-                android:textAppearance="?android:textAppearanceMedium"
-                android:layout_gravity="center"
-                android:textStyle="normal"
-                android:textColor="@color/md_blue_500"
-                android:drawableLeft="@drawable/ic_invite_twitter"
-                android:background="@drawable/bt_if_twitter"
-                android:gravity="center_vertical"
-                />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="@dimen/st_lbt_bt_with"
-            android:layout_height="@dimen/st_lbt_height"
-            android:orientation="horizontal"
-            android:layout_marginTop="20dp"
-            >
-            <Button
-                android:paddingLeft="10dp"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
-                android:gravity="center_vertical"
-                android:layout_width="@dimen/st_lbt_bt_with"
-                android:layout_height="wrap_content"
-                android:text="@string/txt_invite_friend_sms"
-                android:id="@+id/tvInviteFriendSMS"
-                android:textAppearance="?android:textAppearanceMedium"
-                android:layout_gravity="center"
-                android:textStyle="normal"
-                android:textColor="@color/md_green_400"
-                android:drawableLeft="@drawable/ic_invite_sms"
-                android:background="@drawable/bt_if_sms"
-                />
+                android:layout_marginTop="30dp"
+                android:orientation="vertical"
+                android:id="@+id/invite"
+                android:layout_below="@+id/user"
+                android:layout_centerHorizontal="true">
 
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="@dimen/st_lbt_bt_with"
-            android:layout_height="@dimen/st_lbt_height"
-            android:orientation="horizontal"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
-            >
-            <Button
-                android:paddingLeft="10dp"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
-                android:layout_gravity="center"
-                android:layout_width="@dimen/st_lbt_bt_with"
-                android:layout_height="wrap_content"
-                android:text="@string/txt_log_out"
-                android:textStyle="normal"
-                android:textColor="#ff2222"
-                android:textAppearance="?android:textAppearanceMedium"
-                android:textAllCaps="false"
-                android:background="@drawable/bt_logout"
-                android:drawableLeft="@drawable/ic_red_logout"
-                android:gravity="center_vertical"
-                android:id="@+id/btLogout" />
-        </LinearLayout>
+                <LinearLayout
+                    android:layout_width="@dimen/st_lbt_bt_with"
+                    android:layout_height="@dimen/st_lbt_height"
+                    android:orientation="horizontal"
+                    >
 
-    </LinearLayout>
+                    <Button
+                        android:paddingLeft="10dp"
+                        android:paddingBottom="5dp"
+                        android:paddingTop="5dp"
+                        android:layout_width="@dimen/st_lbt_bt_with"
+                        android:layout_height="wrap_content"
+                        android:text="@string/invite_friend_facebook"
+                        android:textAppearance="?android:textAppearanceMedium"
+                        android:id="@+id/tvInviteFriendFacebook"
+                        android:textStyle="normal"
+                        android:textColor="@color/com_facebook_blue"
+                        android:background="@drawable/bt_if_facebook"
+                        android:drawableLeft="@drawable/ic_invite_facebook"
+                        android:gravity="center_vertical"
+                        android:layout_gravity="center"
+                        />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="@dimen/st_lbt_bt_with"
+                    android:layout_height="@dimen/st_lbt_height"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="20dp"
+                    >
+
+                    <Button
+                        android:paddingLeft="10dp"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:layout_width="@dimen/st_lbt_bt_with"
+                        android:layout_height="wrap_content"
+                        android:text="@string/invite_friend_twitter"
+                        android:id="@+id/tvInviteFriendTwitter"
+                        android:textAppearance="?android:textAppearanceMedium"
+                        android:layout_gravity="center"
+                        android:textStyle="normal"
+                        android:textColor="@color/md_blue_500"
+                        android:drawableLeft="@drawable/ic_invite_twitter"
+                        android:background="@drawable/bt_if_twitter"
+                        android:gravity="center_vertical"
+                        />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="@dimen/st_lbt_bt_with"
+                    android:layout_height="@dimen/st_lbt_height"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="20dp"
+                    >
+                    <Button
+                        android:paddingLeft="10dp"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:gravity="center_vertical"
+                        android:layout_width="@dimen/st_lbt_bt_with"
+                        android:layout_height="wrap_content"
+                        android:text="@string/txt_invite_friend_sms"
+                        android:id="@+id/tvInviteFriendSMS"
+                        android:textAppearance="?android:textAppearanceMedium"
+                        android:layout_gravity="center"
+                        android:textStyle="normal"
+                        android:textColor="@color/md_green_400"
+                        android:drawableLeft="@drawable/ic_invite_sms"
+                        android:background="@drawable/bt_if_sms"
+                        />
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="@dimen/st_lbt_bt_with"
+                    android:layout_height="@dimen/st_lbt_height"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp"
+                    >
+                    <Button
+                        android:paddingLeft="10dp"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:layout_gravity="center"
+                        android:layout_width="@dimen/st_lbt_bt_with"
+                        android:layout_height="wrap_content"
+                        android:text="@string/txt_log_out"
+                        android:textStyle="normal"
+                        android:textColor="#ff2222"
+                        android:textAppearance="?android:textAppearanceMedium"
+                        android:textAllCaps="false"
+                        android:background="@drawable/bt_logout"
+                        android:drawableLeft="@drawable/ic_red_logout"
+                        android:gravity="center_vertical"
+                        android:id="@+id/btLogout" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+    </ScrollView>
 
 </RelativeLayout>

@@ -19,9 +19,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import common.Constant;
 import object.GroupChatData;
 
-/**
- * Created by root on 12/11/2016.
- */
 
 public class EditConversationNameDialogFragment extends DialogFragment {
     Button btSave, btCancel;

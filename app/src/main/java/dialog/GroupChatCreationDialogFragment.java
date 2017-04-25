@@ -32,9 +32,6 @@ import object.Tag;
 import object.User;
 import view.ContactCompletionView;
 
-/**
- * Created by root on 09/11/2016.
- */
 
 public class GroupChatCreationDialogFragment extends DialogFragment {
     Button btSend, btCancel;

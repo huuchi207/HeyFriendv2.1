@@ -19,9 +19,6 @@ import common.CommonMethod;
 import de.hdodenhof.circleimageview.CircleImageView;
 import object.GroupChatData;
 
-/**
- * Created by huuchi207 on 17/10/2016.
- */
 
 public class GroupChatForListViewAdapter extends BaseAdapter {
     private Activity context;

@@ -25,7 +25,7 @@
             android:textStyle="bold"
             android:layout_gravity="center_vertical"
             />
-        <com.team2_dtui.heyfriend_v2.view.ContactCompletionView
+        <view.ContactCompletionView
             android:id="@+id/searchView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

@@ -27,9 +27,7 @@ import object.Invitation;
 import object.LastMessage;
 
 
-/**
- * Created by root on 01/11/2016.
- */
+
 
 public class InvitationMesssageAdapter extends BaseAdapter {
     private Activity context;

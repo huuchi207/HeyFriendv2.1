@@ -17,9 +17,6 @@ import com.google.firebase.database.ValueEventListener;
 import common.CommonMethod;
 import common.Constant;
 
-/**
- * Created by root on 21/10/2016.
- */
 
 public class OnStopAppService extends Service {
     DatabaseReference mDatabaseReference;

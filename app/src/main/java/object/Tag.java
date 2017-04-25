@@ -2,9 +2,7 @@ package object;
 
 import java.io.Serializable;
 
-/**
- * Created by root on 12/11/2016.
- */
+
 
 public  class Tag implements Serializable {
     String uid;

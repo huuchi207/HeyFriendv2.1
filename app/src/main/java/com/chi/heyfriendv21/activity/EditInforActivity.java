@@ -164,7 +164,7 @@ public class EditInforActivity extends AppCompatActivity implements View.OnClick
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()) {
                                             if (EditInforActivity.this!= null){
-                                                Toast.makeText(EditInforActivity.this, getString(R.string.announce_welcome) + name, Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(EditInforActivity.this, getString(R.string.announce_welcome)+" " + name, Toast.LENGTH_SHORT).show();
                                             }
 
                                             Intent mainActivity= new Intent(EditInforActivity.this, MainActivity.class);

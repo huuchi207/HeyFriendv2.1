@@ -17,9 +17,6 @@ import adapter.TimelineRecyclerViewAdapter;
 import object.News;
 
 
-/**
- * Created by root on 10/02/2017.
- */
 
 public class TimelineFragment extends Fragment {
     private List<News> news;

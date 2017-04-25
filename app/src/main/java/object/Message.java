@@ -3,9 +3,6 @@ package object;
 
 import common.CommonMethod;
 
-/**
- * Created by huuchi207 on 12/10/2016.
- */
 
 public class Message {
     private String message;

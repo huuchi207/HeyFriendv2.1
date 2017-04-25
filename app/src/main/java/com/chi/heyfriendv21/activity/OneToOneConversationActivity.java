@@ -39,9 +39,6 @@ import object.LastMessage;
 import object.Message;
 
 
-/**
- * Created by root on 19/10/2016.
- */
 
 public class OneToOneConversationActivity extends AppCompatActivity implements View.OnClickListener{
 

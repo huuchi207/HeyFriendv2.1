@@ -18,9 +18,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import object.Friend;
 
 
-/**
- * Created by huuchi207 on 17/10/2016.
- */
 
 public class PrivateChatForListViewAdapter extends BaseAdapter {
     private Activity context;

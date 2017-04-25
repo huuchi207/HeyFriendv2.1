@@ -88,5 +88,6 @@
     <string name="login_fb">Login with facebook</string>
     <string name="login_gg">Login with google</string>
     <string name="login_tw">Login with twitter</string>
+    <string name="txt_type_name">Type name</string>
 
 </resources>

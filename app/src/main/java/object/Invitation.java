@@ -1,8 +1,6 @@
 package object;
 
-/**
- * Created by huuchi207 on 12/10/2016.
- */
+
 
 public class Invitation {
     private String invitationMessage;

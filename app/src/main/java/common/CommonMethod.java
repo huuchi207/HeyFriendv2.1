@@ -22,9 +22,6 @@ import com.google.firebase.database.ValueEventListener;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import com.chi.heyfriendv21.R;
-/**
- * Created by huuchi207 on 13/10/2016.
- */
 
 public class CommonMethod {
     public static long getCurrentTime(){

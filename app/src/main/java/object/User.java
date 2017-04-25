@@ -9,10 +9,6 @@ import java.io.Serializable;
 
 import common.Constant;
 
-/**
- * Created by huuchi207 on 12/10/2016.
- */
-
 public class User implements Serializable {
     private String uid;
     private String email;

@@ -1,8 +1,5 @@
 package dialog;
 
-/**
- * Created by root on 29/10/2016.
- */
 
 
 import android.app.AlertDialog;
@@ -33,9 +30,7 @@ import common.Constant;
 import de.hdodenhof.circleimageview.CircleImageView;
 import object.User;
 
-/**
- * Created by root on 29/10/2016.
- */
+
 
 public class UserInfoDialogFragment extends DialogFragment {
     User user;

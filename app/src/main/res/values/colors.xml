@@ -324,4 +324,6 @@
     <color name="colorBlueOfFb">#3b5998</color>
     <color name="colorRedOfGg">#F44336</color>
     <color name="colorBlueOfTwitter">#00aced</color>
+
+    <color name="selected_item_nav">#15aba5a5</color>
 </resources>

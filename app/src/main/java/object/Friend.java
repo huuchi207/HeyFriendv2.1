@@ -2,9 +2,6 @@ package object;
 
 
 
-/**
- * Created by huuchi207 on 17/10/2016.
- */
 
 public class Friend implements Comparable<Friend> {
     private String uid;

@@ -48,9 +48,7 @@ import common.Constant;
 import io.fabric.sdk.android.Fabric;
 import object.User;
 
-/**
- * Created by huuchi207 on 12/10/2016.
- */
+
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     LoginButton loginWithFacebookButton;
@@ -226,7 +224,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         Intent mainActivity= new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(mainActivity);
                         finish();
-
+                        return;
                     }
 
                 }

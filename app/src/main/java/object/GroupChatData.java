@@ -3,9 +3,7 @@ package object;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-/**
- * Created by root on 10/11/2016.
- */
+
 
 public class GroupChatData implements Comparable<GroupChatData>, Serializable {
     private LastMessage lastMessage;

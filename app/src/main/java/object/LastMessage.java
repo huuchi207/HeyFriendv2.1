@@ -6,9 +6,6 @@ import java.io.Serializable;
 
 import common.CommonMethod;
 
-/**
- * Created by root on 20/10/2016.
- */
 
 public class LastMessage implements Serializable {
     private String content;

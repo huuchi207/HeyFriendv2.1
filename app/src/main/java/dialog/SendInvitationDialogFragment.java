@@ -23,9 +23,7 @@ import object.Friend;
 import object.Invitation;
 import object.User;
 
-/**
- * Created by root on 30/10/2016.
- */
+
 //COMPLETED
 public class SendInvitationDialogFragment extends DialogFragment {
     Button btSend, btCancel;

@@ -16,9 +16,7 @@ import java.util.Locale;
 import de.hdodenhof.circleimageview.CircleImageView;
 import object.User;
 
-/**
- * Created by root on 01/11/2016.
- */
+
 
 public class SearchFriendAdapter extends BaseAdapter {
     private Activity context;
@@ -72,23 +70,7 @@ public class SearchFriendAdapter extends BaseAdapter {
 
         Glide.with(context).load(user.getPhotoURL()).into(viewHolder.civAvatar);
         viewHolder.tvName.setText(user.getName());
-//        viewHolder.btSendInvitation.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                v.startAnimation(Constant.buttonClick);
-////                Log.e("sdfsdffsdsd",user.getName());
-//                SendInvitationDialogFragment sendInvitationDialogFragment=
-//                        new SendInvitationDialogFragment(myUid, user.getUid(), user.getName(), myName, myPhotoUrl);
-//                sendInvitationDialogFragment.show(context.getFragmentManager(),"");
-//            }
-//        });
-//        viewHolder.btBlockUser.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                v.startAnimation(Constant.buttonClick);
-//                Toast.makeText(context,"Incoming...", Toast.LENGTH_SHORT).show();
-//            }
-//        });
+
         return convertView;
     }
     public boolean filter(String charText){

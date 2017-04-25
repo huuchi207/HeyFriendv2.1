@@ -18,9 +18,7 @@ import java.util.List;
 
 import object.News;
 
-/**
- * Created by huuchi207 on 04/03/2017.
- */
+
 
 public class TimelineRecyclerViewAdapter extends
         RecyclerView.Adapter<TimelineRecyclerViewAdapter.ViewHolder> {

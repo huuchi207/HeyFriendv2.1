@@ -44,9 +44,7 @@ import object.Friend;
 import object.GroupChatData;
 import object.LastMessage;
 
-/**
- * Created by huuchi207 on 17/10/2016.
- */
+
 
 public class MessageFragment extends Fragment implements View.OnClickListener {
     RadioButton rbPrivateChat, rbGroupChat;
@@ -105,87 +103,12 @@ public class MessageFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-//        if (item.getTitle()== "Delete"){
-//            final int position = info.position;
-//            final Friend f= privateChatForListViewAdapter.getItem(position);
-//            if (currentFirebaseUser!=null && f!= null)
-//            databaseReferenceFriendLists.getRoot().child(Constant.CHILD_CHATONETOONE)
-//                    .child(currentFirebaseUser.getUid()).child(f.getUid()).removeValue(new DatabaseReference.CompletionListener() {
-//                @Override
-//                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-//                    if (databaseError!= null){
-//                        Toast.makeText(getActivity(), R.string.announce_cant_delete_this_conversation, Toast.LENGTH_SHORT).show();
-//                    }
-//                    else{
-//                        databaseReferenceFriendLists.getRoot().child(Constant.CHILD_FRIENDLISTS)
-//                                .child(currentFirebaseUser.getUid()).child(f.getUid()).child(Constant.CHILD_LASTMESSAGE).removeValue(new DatabaseReference.CompletionListener() {
-//                            @Override
-//                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-//                                if (databaseError!= null){
-//                                    Toast.makeText(getActivity(), R.string.announce_cant_delete_this_conversation, Toast.LENGTH_SHORT).show();
-//                                }
-//                                else{
-//                                    Toast.makeText(getActivity(), R.string.announce_this_conversation_is_deleted, Toast.LENGTH_SHORT).show();
-////                                    friends.remove(position);
-////                                    privateChatForListViewAdapter.notifyDataSetChanged();
-//                                }
-//                            }
-//                        });
-//
-//                    }
-//                }
-//            });
-//        }
         return true;
     }
 
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_message_2, container, false);
-//        rbGroupChat = (RadioButton) view.findViewById(R.id.rbGroupChat);
-//        rbPrivateChat = (RadioButton) view.findViewById(R.id.rbPrivateChat);
-//        lvGroupChat = (ListView) view.findViewById(R.id.lvGroupChat);
-//        lvPrivateChat = (ListView) view.findViewById(R.id.lvPrivateChat);
-//        //Float button
-//        civFloatButton = (CircleImageView) view.findViewById(R.id.civ_float_button);
-//        lvPrivateChat.setAdapter(privateChatForListViewAdapter);
-//        lvPrivateChat.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-//                if (currentFirebaseUser!=null){
-//                    Intent intent= new Intent(getActivity(), OneToOneConversationActivity.class);
-//                    intent.putExtra(Constant.CLIENT_UID, privateChatForListViewAdapter.getData().get(position).getUid());
-//                    intent.putExtra(Constant.MY_UID, currentFirebaseUser.getUid());
-//                    intent.putExtra("My " +Constant.KEY_PHOTOURL, currentFirebaseUser.getPhotoUrl().toString());
-//                    intent.putExtra("Client " +Constant.KEY_PHOTOURL, privateChatForListViewAdapter.getData().get(position).getPhotoURL());
-//                    intent.putExtra("client name", privateChatForListViewAdapter.getData().get(position).getName().toString());
-//                    intent.putExtra("my name", currentFirebaseUser.getDisplayName().toString());
-//                    startActivity(intent);
-//                }
-//
-//            }
-//        });
-//        registerForContextMenu(lvPrivateChat);
-//
-////        registerForContextMenu(lvGroupChat);
-//        lvGroupChat.setAdapter(groupChatForListViewAdapter);
-//        lvGroupChat.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-//                if (currentFirebaseUser!=null){
-//                    Intent intent= new Intent(getActivity(), GroupConversationActivity.class);
-//                    intent.putExtra(Constant.GROUP_CHAT_DATA, groupChatForListViewAdapter.getItem(position));
-//                    intent.putExtra(Constant.MY_UID, currentFirebaseUser.getUid());
-//
-//                    startActivity(intent);
-//                }
-//
-//            }
-//        });
-//
-//        rbPrivateChat.setOnClickListener(this);
-//        rbGroupChat.setOnClickListener(this);
-//        civFloatButton.setOnClickListener(this);
 
         ViewPager viewPager = (ViewPager) view.findViewById(R.id.viewpager);
         MessageFragmentPagerAdapter p =new MessageFragmentPagerAdapter(myContext.getSupportFragmentManager(), getActivity());
@@ -202,28 +125,6 @@ public class MessageFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-//        if(view==rbGroupChat){
-//            lvPrivateChat.setVisibility(View.GONE);
-//            lvGroupChat.setVisibility(View.VISIBLE);
-//        }
-//        else if(view == rbPrivateChat){
-//            lvGroupChat.setVisibility(View.GONE);
-//            lvPrivateChat.setVisibility(View.VISIBLE);
-//        }
-//        else if (view == civFloatButton){
-//            FirebaseUser firebaseUser= CommonMethod.getCurrentFirebaseUser();
-//            if(firebaseUser!=null){
-//                CommonMethod.showAnimation(view, getContext());
-//                GroupChatCreationDialogFragment dialogFragment=
-//                        new GroupChatCreationDialogFragment(
-//                                firebaseUser.getUid(),
-//                                firebaseUser.getDisplayName(),
-//                                firebaseUser.getPhotoUrl().toString()
-//                        );
-//                dialogFragment.show(getActivity().getFragmentManager(), "");
-//            }
-//
-//        }
     }
     private void updateView(){
 
@@ -249,80 +150,5 @@ public class MessageFragment extends Fragment implements View.OnClickListener {
 
         t.start();
     }
-    private void getGroupMessage(){
-        databaseReferenceFriendLists.getRoot().child(Constant.CHILD_GROUPCHAT).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (currentFirebaseUser!= null){
-                    groupChatDatas.clear();
-                    for (DataSnapshot ds: dataSnapshot.getChildren()){
-                        if (ds.child(Constant.CHILD_USERS).hasChild(currentFirebaseUser.getUid())){
 
-                            boolean myStatus = false;
-                            if (ds.child(Constant.CHILD_USERS).child(currentFirebaseUser.getUid()).
-                                    hasChild(Constant.KEY_STATUS)){
-                                myStatus= (boolean)ds.child(Constant.CHILD_USERS).child(currentFirebaseUser.getUid()).
-                                        child(Constant.KEY_STATUS).getValue();
-                            }
-
-                            if (myStatus==true){
-                                GroupChatData groupChatData = new GroupChatData();
-                                groupChatData.setUid(ds.getKey());
-                                if (ds.hasChild(Constant.CHILD_LASTMESSAGE)){
-                                    LastMessage lastMessage = ds.child(Constant.CHILD_LASTMESSAGE).getValue(LastMessage.class);
-//                            Log.e("last message", lastMessage.getContent() + "   "+ lastMessage.getTime() + "   ");
-                                    groupChatData.setLastMessage(lastMessage);
-                                }
-                                if (ds.hasChild(Constant.KEY_NAME)){
-                                    groupChatData.setName(ds.child(Constant.KEY_NAME).getValue().toString());
-//                            Log.e("name----", groupChatData.getName());
-                                }
-                                if (ds.hasChild(Constant.CHILD_USERS)){
-
-                                    ArrayList<GroupChatData.Participant> participants= new ArrayList<>();
-                                    for (DataSnapshot p : ds.child(Constant.CHILD_USERS).getChildren()){
-                                        String name="", uid, photoUrl="";
-                                        Boolean status= true;
-                                        uid = p.getKey().toString();
-//                                Log.e("uid--", uid);
-
-                                        if (p.hasChild(Constant.KEY_NAME)){
-                                            name = p.child(Constant.KEY_NAME).getValue().toString();
-//                                    Log.e("name--", name);
-                                        }
-                                        if (p.hasChild(Constant.KEY_PHOTOURL)){
-                                            photoUrl = p.child(Constant.KEY_PHOTOURL).getValue().toString();
-//                                    Log.e("photourl---", photoUrl);
-                                        }
-                                        if (p.hasChild(Constant.KEY_STATUS)) {
-                                            status = (boolean)p.child(Constant.KEY_STATUS).getValue();
-                                        }
-                                        if (name.equals("") || uid.equals("") || photoUrl.equals("")){
-//                                    Log.e("name.equals..", "false");
-                                        }
-                                        else participants.add(new GroupChatData.Participant(uid, photoUrl, name, status));
-                                    }
-                                    groupChatData.setParticipants(participants);
-                                }
-//                        if (ds.child(Constant.CHILD_USERS).hasChild(currentFirebaseUser.getUid()))
-                                groupChatDatas.add(groupChatData);
-
-                            }
-
-                        }
-                    }
-                }
-
-                Collections.sort(groupChatDatas);
-//                Log.e("group chat size", groupChatDatas.size()+"");
-
-                groupChatForListViewAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
 }

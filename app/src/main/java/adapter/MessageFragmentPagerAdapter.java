@@ -12,9 +12,6 @@ import fragment.GroupChatFragment;
 import fragment.PrivateChatFragment;
 
 
-/**
- * Created by root on 11/02/2017.
- */
 
 public class MessageFragmentPagerAdapter extends FragmentStatePagerAdapter {
     final int PAGE_COUNT = 2;

@@ -1,8 +1,6 @@
 package object;
 
-/**
- * Created by huuchi207 on 15/03/2017.
- */
+
 
 public class News {
     private String urlAvatar;

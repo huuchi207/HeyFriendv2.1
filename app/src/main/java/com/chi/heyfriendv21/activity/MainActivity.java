@@ -4,11 +4,13 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.internal.NavigationMenuView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.DividerItemDecoration;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -45,11 +47,12 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import adapter.SearchAdapter;
+import adapter.ListFriendAdapter;
 import adapter.SearchFriendAdapter;
 import common.CommonMethod;
 import common.Constant;
-import common.ReserveSearchKey;
+
+import dialog.GroupChatCreationDialogFragment;
 import dialog.UserInfoDialogFragment;
 import fragment.InvitationFragment;
 import fragment.MessageFragment;
@@ -69,21 +72,39 @@ public class MainActivity extends AppCompatActivity
     private MaterialRippleLayout rippleLayoutForActionButton, rippleLayoutForSearchButton;
 //    private ArrayList<String> allUsers;
     ArrayList<User> allUsers= new ArrayList<>();
-    Map<String, Boolean> isAFriend= new HashMap<>();
+    Map<String, Boolean> isAFriend;
     SearchFriendAdapter searchFriendAdapter;
+    private FloatingActionButton fab;
+    private NavigationView navigationView;
+
+    ListView lvFriendsOnline, lvFriendsOffline;
+    ListFriendAdapter friendsOnlineAdapter, friendsOfflineAdapter;
+    ArrayList friendsOnline, friendsOffline;
+
+    TextView tvTotalFriends;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+                FirebaseUser firebaseUser= CommonMethod.getCurrentFirebaseUser();
+                if(firebaseUser!=null){
+                    GroupChatCreationDialogFragment dialogFragment=
+                            new GroupChatCreationDialogFragment(
+                                    firebaseUser.getUid(),
+                                    firebaseUser.getDisplayName(),
+                                    firebaseUser.getPhotoUrl().toString()
+                            );
+                    dialogFragment.show(getFragmentManager(), "");
+                }
+
             }
         });
 
@@ -93,9 +114,11 @@ public class MainActivity extends AppCompatActivity
 //        drawer.setDrawerListener(toggle);
 //        toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
+        //add divider to item nav view
+        NavigationMenuView navMenuView = (NavigationMenuView) navigationView.getChildAt(0);
+        navMenuView.addItemDecoration(new DividerItemDecoration(MainActivity.this,DividerItemDecoration.VERTICAL));
         //init drawerLayout
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
@@ -123,16 +146,29 @@ public class MainActivity extends AppCompatActivity
         });
 
         //check firebase user
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            // User is signed in
+            Log.e(TAG, "User is signed in");
+        } else {
+            // User is signed out
+            Log.e(TAG, "User is signed out");
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            finish();
+        }
+        //listen changing user
         FirebaseAuth.AuthStateListener mAuthListener= new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // User is signed in
-                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                    Log.e(TAG, "User is signed in");
                 } else {
                     // User is signed out
-                    Log.d(TAG, "onAuthStateChanged:signed_out");
+                    Log.e(TAG, "User is signed out");
+                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                    finish();
                 }
                 // ...
             }
@@ -145,10 +181,33 @@ public class MainActivity extends AppCompatActivity
         shadowActionBar = findViewById(R.id.shadow_actionbar);
         rippleLayoutForActionButton = (MaterialRippleLayout) findViewById(R.id.ripple_view_action_button);
         rippleLayoutForSearchButton = (MaterialRippleLayout) findViewById(R.id.ripple_view_search_button);
+        //init view for friendlist
+        //------------------------
+        lvFriendsOffline = (ListView) findViewById(R.id.list_friend_offline);
+        lvFriendsOnline = (ListView) findViewById(R.id.list_friend_online);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        tvTotalFriends = (TextView) findViewById(R.id.tvTotalFriends);
+        isAFriend = new HashMap<>();
+        friendsOffline = new ArrayList();
+        friendsOnline = new ArrayList();
+
+        friendsOfflineAdapter = new ListFriendAdapter(this, R.layout.itemlist_friendoffline,friendsOffline);
+        friendsOnlineAdapter = new ListFriendAdapter(this, R.layout.itemlist_friendonline, friendsOnline);
+
+        lvFriendsOffline.setAdapter(friendsOfflineAdapter);
+        lvFriendsOnline.setAdapter(friendsOnlineAdapter);
+        //---------------------------------------
+        //init view for search friend
+        searchFriendAdapter = new SearchFriendAdapter(this, R.layout.item_search_friend,allUsers);
         //assign onClickListener
         btAction.setOnClickListener(this);
         ibNav.setOnClickListener(this);
         ibSearch.setOnClickListener(this);
+        //set current fragment
+        switchFragmentById(R.id.nav_timeline);
+        //get data from server
+        getAllUser();
+
     }
 
     @Override
@@ -206,29 +265,35 @@ public class MainActivity extends AppCompatActivity
         fragmentTransaction.commit();
     }
     private void switchFragmentById(int id) {
+        //set actived item nav
+        navigationView.getMenu().findItem(id).setChecked(true);
         if (id == R.id.nav_timeline) {
             showFragment(new TimelineFragment());
             shadowActionBar.setVisibility(View.VISIBLE);
             rippleLayoutForActionButton.setVisibility(View.VISIBLE);
             rippleLayoutForSearchButton.setVisibility(View.GONE);
+            fab.setVisibility(View.GONE);
         }
         else if (id == R.id.nav_conversation){
             showFragment(new MessageFragment());
             shadowActionBar.setVisibility(View.GONE);
             rippleLayoutForActionButton.setVisibility(View.VISIBLE);
             rippleLayoutForSearchButton.setVisibility(View.GONE);
+            fab.setVisibility(View.VISIBLE);
         }
         else if (id== R.id.nav_invitation){
             showFragment(new InvitationFragment());
             shadowActionBar.setVisibility(View.VISIBLE);
             rippleLayoutForActionButton.setVisibility(View.GONE);
             rippleLayoutForSearchButton.setVisibility(View.VISIBLE);
+            fab.setVisibility(View.GONE);
         }
         else if (id==R.id.nav_setting){
             showFragment(new SettingFragment());
             shadowActionBar.setVisibility(View.VISIBLE);
             rippleLayoutForActionButton.setVisibility(View.GONE);
             rippleLayoutForSearchButton.setVisibility(View.GONE);
+            fab.setVisibility(View.GONE);
         }
     }
 
@@ -255,7 +320,7 @@ public class MainActivity extends AppCompatActivity
         final TextView txtEmpty = (TextView) view.findViewById(R.id.txt_empty);
 
         CommonMethod.setListViewHeightBasedOnChildren(listSearch);
-        edtToolSearch.setHint("Type name");
+        edtToolSearch.setHint(getString(R.string.txt_type_name));
 
         final Dialog toolbarSearchDialog = new Dialog(MainActivity.this, R.style.MaterialSearch);
         toolbarSearchDialog.setContentView(view);
@@ -270,7 +335,7 @@ public class MainActivity extends AppCompatActivity
 //        final SearchAdapter reservedSearchAdapter = new SearchAdapter(MainActivity.this, keywordsStored, false);
 
         listSearch.setVisibility(View.VISIBLE);
-        searchFriendAdapter = new SearchFriendAdapter(this, R.layout.item_search_friend,allUsers);
+
         listSearch.setAdapter(searchFriendAdapter);
         getAllUser();
 
@@ -358,13 +423,21 @@ public class MainActivity extends AppCompatActivity
 
 
     }
-    void getAllUser(){
+    private void getAllUser(){
         FirebaseDatabase.getInstance().getReference().
                 child(Constant.CHILD_USERS).
                 addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 allUsers.clear();
+                //for list friend
+                ArrayList<User> allFriends= new ArrayList<>();
+                if (friendsOnline!= null)
+                    friendsOnline.clear();
+
+                if (friendsOffline!= null)
+                    friendsOffline.clear();
+
                 for (DataSnapshot ds: dataSnapshot.getChildren()){
                     User user= ds.getValue(User.class);
                     if (FirebaseAuth.getInstance().getCurrentUser()!=null){
@@ -382,8 +455,28 @@ public class MainActivity extends AppCompatActivity
                             searchFriendAdapter.notifyDataSetChanged();
                         }
                     }
-
                 }
+                //for list friend
+                for (User user: allUsers) {
+                    if (isAFriend.containsKey(user.getUid())) {
+                        allFriends.add(user);
+                    }
+                }
+                if (tvTotalFriends!=null)
+                    tvTotalFriends.setText(getString(R.string.txt_total)+ allFriends.size()+" "+ getString(R.string.txt_friends));
+                for (User user: allFriends){
+//                    Log.e("test method", "");
+                    if (user.isConnection()){
+                        friendsOnline.add(user);
+
+                    }
+                    else{
+                        friendsOffline.add(user);
+
+                    }
+                }
+                friendsOnlineAdapter.notifyDataSetChanged();
+                friendsOfflineAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -392,4 +485,6 @@ public class MainActivity extends AppCompatActivity
             }
         });
     }
+
+
 }

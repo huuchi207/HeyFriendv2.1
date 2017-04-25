@@ -23,9 +23,6 @@ import common.MessageViewHolder;
 import object.Message;
 
 
-/**
- * Created by root on 23/10/2016.
- */
 
 public class PrivateMessagesForRecyclerViewAdapter extends FirebaseRecyclerAdapter<Message,MessageViewHolder> {
 

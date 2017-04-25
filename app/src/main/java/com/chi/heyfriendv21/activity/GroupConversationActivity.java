@@ -44,9 +44,6 @@ import object.GroupChatData;
 import object.LastMessage;
 import object.Message;
 
-/**
- * Created by root on 10/11/2016.
- */
 
 public class GroupConversationActivity extends AppCompatActivity implements
         View.OnClickListener, PopupMenu.OnMenuItemClickListener, EditConversationNameDialogFragment.OnCompleteListener{

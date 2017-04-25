@@ -22,9 +22,6 @@ import object.GroupChatData;
 import object.Tag;
 import view.ContactCompletionView;
 
-/**
- * Created by root on 12/11/2016.
- */
 
 public class ListParticipantsDialogFragment extends DialogFragment {
     Button btSave, btCancel;

@@ -12,9 +12,6 @@ import com.chi.heyfriendv21.R;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 
-/**
- * Created by root on 02/11/2016.
- */
 
 public class MessageViewHolder extends RecyclerView.ViewHolder  implements View.OnCreateContextMenuListener {
     public TextView tvMessage;
