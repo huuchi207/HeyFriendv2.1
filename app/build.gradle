@@ -52,13 +52,13 @@ dependencies {
     compile 'com.android.support:percent:25.2.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha7'
     //firebase
-    compile 'com.google.firebase:firebase-database:10.0.1'
-    compile 'com.google.firebase:firebase-auth:10.2.0'
-    compile 'com.google.firebase:firebase-invites:10.2.0'
-    compile 'com.google.firebase:firebase-database:10.2.0'
+    compile 'com.google.firebase:firebase-auth:10.2.1'
+    compile 'com.google.firebase:firebase-invites:10.2.1'
+    compile 'com.google.firebase:firebase-database:10.2.1'
     compile 'com.firebase:firebase-client-android:2.3.1'
     compile 'com.firebaseui:firebase-ui-database:0.4.0'
-    compile 'com.google.android.gms:play-services-appinvite:10.0.1'
+    compile 'com.google.android.gms:play-services-appinvite:10.2.1'
+    compile 'com.google.firebase:firebase-storage:10.2.1'
     //ripple view
     compile 'com.balysv:material-ripple:1.0.2'
     //facebook
@@ -75,6 +75,10 @@ dependencies {
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'com.github.Plumillon:ChipView:1.2.0'
     compile "com.splitwise:tokenautocomplete:2.0.8@aar"
+
+
+    //collapse fab
+    compile 'com.getbase:floatingactionbutton:1.10.1'
 
     testCompile 'junit:junit:4.12'
 }

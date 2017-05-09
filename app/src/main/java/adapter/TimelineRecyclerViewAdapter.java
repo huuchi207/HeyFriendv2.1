@@ -2,7 +2,7 @@ package adapter;
 
 
 import android.content.Context;
-import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,17 +12,19 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.chi.heyfriendv21.R;
 
 import java.util.List;
 
-import object.News;
-
+import common.CommonMethod;
+import de.hdodenhof.circleimageview.CircleImageView;
+import object.Post;
 
 
 public class TimelineRecyclerViewAdapter extends
         RecyclerView.Adapter<TimelineRecyclerViewAdapter.ViewHolder> {
-    private List<News> list;
+    private List<Post> list;
     private final int LOCKED = 1;
     private final int UNLOCKED = 0;
     private final int PREMIUM = 2;
@@ -31,7 +33,7 @@ public class TimelineRecyclerViewAdapter extends
     private ViewHolder viewHolder;
     private Fragment parentFragment;
 
-    public TimelineRecyclerViewAdapter(List<News> list, Context context) {
+    public TimelineRecyclerViewAdapter(List<Post> list, Context context) {
 
         this.list = list;
         this.context = context;
@@ -39,11 +41,17 @@ public class TimelineRecyclerViewAdapter extends
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-       public ImageView tv;
+        public TextView tvName, tvContent, tvTime;
+        public CircleImageView civAvatar;
+        public ImageView ivImage;
 
         public ViewHolder(View view) {
             super(view);
-
+            tvName = (TextView) view.findViewById(R.id.tvName_ItemRecyclerViewTimeline);
+            tvContent = (TextView) view.findViewById(R.id.tvContent_ItemRecyclerViewTimeline);
+            tvTime = (TextView) view.findViewById(R.id.tvTime_ItemRecyclerViewTimeline);
+            civAvatar = (CircleImageView) view.findViewById(R.id.civAvatar_ItemRecyclerViewTimeline);
+            ivImage = (ImageView) view.findViewById(R.id.ivImage_ItemRecyclerViewTimeline);
         }
     }
 
@@ -54,18 +62,25 @@ public class TimelineRecyclerViewAdapter extends
 
     public void onBindViewHolder(final ViewHolder viewHolder,
                                  final int position) {
-
         viewHolder.setIsRecyclable(false);
-
+        Post post = list.get(position);
+        viewHolder.tvName.setText(post.getName());
+        viewHolder.tvContent.setText(post.getContent());
+        viewHolder.tvTime.setText(CommonMethod.diffTime(context, post.getTime()));
+        Glide.with(context).load(post.getUrlAvatar()).into(viewHolder.civAvatar);
+        if (post.getUrlImage()==null){
+            viewHolder.ivImage.setVisibility(View.GONE);
+        }
+        else Glide.with(context).load(post.getUrlImage()).into(viewHolder.ivImage);
     }
 
     @Override
     public TimelineRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                         int viewType) {
+                                                                     int viewType) {
         //Inflate the layout, initialize the View Holder
         View itemLayoutView;
         itemLayoutView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_recyclerview_timeline, null);
+                .inflate(R.layout.item_recyclerview_timeline, parent, false);
 
         viewHolder = new ViewHolder(itemLayoutView);
         return viewHolder;

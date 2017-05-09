@@ -1,20 +1,26 @@
 package com.chi.heyfriendv21.activity;
 
+import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -22,13 +28,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.chi.heyfriendv21.R;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
 import adapter.PrivateMessagesForRecyclerViewAdapter;
@@ -41,6 +52,7 @@ import object.Message;
 
 
 public class OneToOneConversationActivity extends AppCompatActivity implements View.OnClickListener{
+    private static final int REQUEST_IMAGE_CAPTURE = 111;
 
 
     private String clientUid, myUid;
@@ -51,13 +63,15 @@ public class OneToOneConversationActivity extends AppCompatActivity implements V
     ImageView ibBack;
     ImageView  ivCamera;
     TextView tvName, tvState;
-    ImageButton ibMenu;
+    Button btMenu;
     RecyclerView recyclerView;
     private PrivateMessagesForRecyclerViewAdapter privateMessagesForRecyclerViewAdapter;
     private LinearLayoutManager linearLayoutManager;
 
     private ImageView ivSend;
     private EditText etMessage;
+    private ProgressDialog loadingProgressBar = null;
+
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         int position = -1;
@@ -81,13 +95,13 @@ public class OneToOneConversationActivity extends AppCompatActivity implements V
                     clipboard.setPrimaryClip(clip);
 
                 }
-
                 break;
             case 3:
                 //delete message
                 if (position!= -1){
                     final int finalPosition = position;
-                    if (position== privateMessagesForRecyclerViewAdapter.getItemCount()-1 && privateMessagesForRecyclerViewAdapter.getItemCount()>1){
+                    if (position== privateMessagesForRecyclerViewAdapter.getItemCount()-1
+                            && privateMessagesForRecyclerViewAdapter.getItemCount()>1){
 //                        Log.e("----------index", position+"");
                         Message prevMessage = privateMessagesForRecyclerViewAdapter.getItem(position-1);
 
@@ -103,8 +117,9 @@ public class OneToOneConversationActivity extends AppCompatActivity implements V
                                 }
                             }
                         });
-                    }else
-                    if (position==0){
+                    }
+                    else
+                    if (position==0 && privateMessagesForRecyclerViewAdapter.getItemCount()==1){
                         databaseReference.child(Constant.CHILD_FRIENDLISTS).child(myUid).child(clientUid).
                                 child(Constant.CHILD_LASTMESSAGE).removeValue(new DatabaseReference.CompletionListener() {
                             @Override
@@ -117,7 +132,8 @@ public class OneToOneConversationActivity extends AppCompatActivity implements V
                                 }
                             }
                         });
-                    }else {
+                    }
+                    else {
                         deleteMessage(position);
                     }
                 }
@@ -134,7 +150,11 @@ public class OneToOneConversationActivity extends AppCompatActivity implements V
         getDataIntent();
         getClientInfo();
         CommonMethod.updateOnlineState(myUid, databaseReference);
-        privateMessagesForRecyclerViewAdapter = new PrivateMessagesForRecyclerViewAdapter(Message.class, R.layout.item_message_onetoone, MessageViewHolder.class, databaseReference.child(Constant.CHILD_CHATONETOONE).child(myUid).child(clientUid).getRef(), OneToOneConversationActivity.this, clientUid, myUid, clientPhotoURL);
+        privateMessagesForRecyclerViewAdapter = new
+                PrivateMessagesForRecyclerViewAdapter(Message.class, R.layout.item_message_onetoone, MessageViewHolder.class,
+                databaseReference.child(Constant.CHILD_CHATONETOONE).
+                        child(myUid).child(clientUid).getRef(),
+                OneToOneConversationActivity.this, clientUid, myUid, clientPhotoURL, this);
 
         privateMessagesForRecyclerViewAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
@@ -180,7 +200,6 @@ public class OneToOneConversationActivity extends AppCompatActivity implements V
                     messageViewHolder.llAllComponent.setVisibility(View.VISIBLE);
                 }
                 else{
-
                     Toast.makeText(OneToOneConversationActivity.this, R.string.announce_msg_is_deleted, Toast.LENGTH_SHORT).show();
                 }
             }
@@ -198,15 +217,18 @@ public class OneToOneConversationActivity extends AppCompatActivity implements V
         tvState= (TextView) findViewById(R.id.tvState);
         etMessage = (EditText) findViewById(R.id.etMessage);
         recyclerView= (RecyclerView) findViewById(R.id.messageRecyclerView);
-        ibMenu = (ImageButton) findViewById(R.id.ibMenu);
-
+        btMenu = (Button) findViewById(R.id.btMenu);
+        loadingProgressBar = new ProgressDialog(this);
+        loadingProgressBar.setCancelable(false);
+        loadingProgressBar.setMessage(getString(R.string.txt_uploading));
+        loadingProgressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         //set on click button
 //        ivMap.setOnClickListener(this);
         ivCamera.setOnClickListener(this);
         ibBack.setOnClickListener(this);
         ivSend.setOnClickListener(this);
-        ibMenu.setOnClickListener(this);
-        ibMenu.setVisibility(View.GONE);
+        btMenu.setOnClickListener(this);
+        btMenu.setVisibility(View.GONE);
         ivSend.setEnabled(false);
         etMessage.addTextChangedListener(new TextWatcher() {
             @Override
@@ -287,60 +309,10 @@ public class OneToOneConversationActivity extends AppCompatActivity implements V
             finish();
         else if (view == ivSend){
             //update in CHILD_CHATONETOONE and CHILD_LASTMESSAGE
+            pushMessage("");
 
-            if (etMessage.getText().toString().trim().equals("")){
-                Toast.makeText(OneToOneConversationActivity.this, R.string.announce_empty_msg, Toast.LENGTH_SHORT).show();
-            }else{
-                databaseReference.child(Constant.CHILD_CHATONETOONE).child(myUid).child(clientUid).push().setValue(new Message(etMessage.getText().toString().trim(), myUid), new DatabaseReference.CompletionListener() {
-                    @Override
-                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                        if(databaseError!= null){
-                            Log.e("completion error", databaseError.getDetails());
-                            Toast.makeText(OneToOneConversationActivity.this, R.string.announce_cant_send_msg, Toast.LENGTH_SHORT).show();
-                        }
-                        else{
-                            etMessage.setText("");
-                        }
-                    }
-                });
-                databaseReference.child(Constant.CHILD_FRIENDLISTS).child(myUid).child(clientUid).child(Constant.CHILD_LASTMESSAGE).setValue(new LastMessage(etMessage.getText().toString().trim(),CommonMethod.getCurrentTime(), true,myUid), new DatabaseReference.CompletionListener() {
-                    @Override
-                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                        if(databaseError!= null){
-                            Log.e("completion error", databaseError.getDetails());
-                            Toast.makeText(OneToOneConversationActivity.this, R.string.announce_cant_send_msg, Toast.LENGTH_SHORT).show();
-                        }
-                        else{
-                            etMessage.setText("");
-                        }
-                    }
-                });
-                databaseReference.child(Constant.CHILD_CHATONETOONE).child(clientUid).child(myUid).push().setValue(new Message(etMessage.getText().toString().trim(), myUid), new DatabaseReference.CompletionListener() {
-                    @Override
-                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                        if(databaseError!= null){
-                            Log.e("completion error", databaseError.getDetails());
-                            Toast.makeText(OneToOneConversationActivity.this, R.string.announce_cant_send_msg, Toast.LENGTH_SHORT).show();
-                        }
-                        else{
-                            etMessage.setText("");
-                        }
-                    }
-                });
-                databaseReference.child(Constant.CHILD_FRIENDLISTS).child(clientUid).child(myUid).child(Constant.CHILD_LASTMESSAGE).setValue(new LastMessage(etMessage.getText().toString().trim(), myUid), new DatabaseReference.CompletionListener() {
-                    @Override
-                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                        if(databaseError!= null){
-                            Log.e("completion error", databaseError.getDetails());
-                            Toast.makeText(OneToOneConversationActivity.this, R.string.announce_cant_send_msg, Toast.LENGTH_SHORT).show();
-                        }
-                        else{
-                            etMessage.setText("");
-                        }
-                    }
-                });
-            }
-
+        }else if (view == ivCamera){
+            onLaunchCamera();
         }
 //        else if(view == ivMap){
 //            Intent intent=new Intent(OneToOneConversationActivity.this,MainActivity.class);
@@ -375,28 +347,73 @@ public class OneToOneConversationActivity extends AppCompatActivity implements V
 
         t.start();
     }
-//    public void showPopup(View v) {
-//        PopupMenu popup = new PopupMenu(this, v);
-//        popup.setOnMenuItemClickListener(this);
-//
-//        MenuInflater inflater = popup.getMenuInflater();
-//        inflater.inflate(R.menu.chat_menu, popup.getMenu());
-//        popup.show();
-//    }
-//    @Override
-//    public boolean onMenuItemClick(MenuItem item) {
-//        switch (item.getItemId()) {
-//            case R.id.information_menu:
-//
-//                return true;
-//            case R.id.edit_participant_menu:
-//                return true;
-//            case R.id.edit_name_menu:
-//
-//            default:
-//                return false;
-//        }
 
+    void onLaunchCamera() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        }
+    }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            postDataToFirebase(imageBitmap);
+        }
+    }
+    private void postDataToFirebase(Bitmap bitmap) {
+        String msg = etMessage.getText().toString();
+        if (bitmap!= null) {
+            loadingProgressBar.show();
+            String fileName = ""+bitmap.hashCode();
+            StorageReference filepathRef =
+                    FirebaseStorage.getInstance().getReference("images"+ "/"+ fileName);
 
+            //compress image
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 80, byteArrayOutputStream);
+            byte[] data = byteArrayOutputStream.toByteArray();
+
+            UploadTask uploadTask = filepathRef.putBytes(data);
+            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                    @SuppressWarnings("VisibleForTests")
+                    final Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                    pushMessage(downloadUrl.toString());
+                    loadingProgressBar.dismiss();
+
+                }
+            });
+
+        }
+    }
+    private void pushMessage(String photoUrl){
+        String msg = etMessage.getText().toString().trim();
+        if (msg.equals("") &&photoUrl.equals("")){
+            Toast.makeText(OneToOneConversationActivity.this, getString(R.string.announce_empty_msg),
+                    Toast.LENGTH_SHORT).show();
+        }else{
+            //for show last message in chat list
+            if (msg.equals(""))
+                msg = "Image";
+            //ignore photoUrl path in firebase storage
+            if (photoUrl.equals(""))
+                photoUrl= null;
+            databaseReference.child(Constant.CHILD_CHATONETOONE+"/"+myUid+"/"+clientUid).
+                    push().setValue(new Message(msg, myUid, photoUrl));
+            databaseReference.child(Constant.CHILD_FRIENDLISTS+"/"+myUid+"/"+clientUid+"/"
+                    +Constant.CHILD_LASTMESSAGE).
+                    setValue(new LastMessage(msg, myUid, true));
+            databaseReference.child(Constant.CHILD_CHATONETOONE+"/"+clientUid+"/"+myUid).push().
+                    setValue(new Message(msg, myUid, photoUrl));
+            databaseReference.child(Constant.CHILD_FRIENDLISTS+"/"+clientUid+"/"+myUid+"/"+
+                    Constant.CHILD_LASTMESSAGE).
+                    setValue(new LastMessage(msg, myUid));
+        }
+        etMessage.setText("");
+    }
 }

@@ -81,7 +81,8 @@ public class GroupChatFragment extends Fragment {
         if (currentFirebaseUser!= null){
             currentUid= currentFirebaseUser.getUid();
         }
-        groupChatForListViewAdapter = new GroupChatForListViewAdapter(getActivity(), R.layout.item_private_chat,
+        groupChatForListViewAdapter = new GroupChatForListViewAdapter(
+                getActivity(), R.layout.item_private_chat,
                 groupChatDatas, currentUid);
         lvGroupChat.setAdapter(groupChatForListViewAdapter);
         lvGroupChat.setOnItemClickListener(new AdapterView.OnItemClickListener() {

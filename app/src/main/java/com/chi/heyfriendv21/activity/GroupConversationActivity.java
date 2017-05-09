@@ -1,13 +1,17 @@
 package com.chi.heyfriendv21.activity;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,6 +23,7 @@ import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -26,12 +31,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.chi.heyfriendv21.R;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
 import adapter.GroupMessagesForRecyclerViewAdapter;
@@ -46,8 +56,8 @@ import object.Message;
 
 
 public class GroupConversationActivity extends AppCompatActivity implements
-        View.OnClickListener, PopupMenu.OnMenuItemClickListener, EditConversationNameDialogFragment.OnCompleteListener{
-
+        View.OnClickListener, PopupMenu.OnMenuItemClickListener, EditConversationNameDialogFragment.OnCompleteListener {
+    private static final int REQUEST_IMAGE_CAPTURE = 111;
 
     private String clientUid, myUid;
     private GroupChatData groupChatData;
@@ -58,12 +68,15 @@ public class GroupConversationActivity extends AppCompatActivity implements
     ImageView ivMap, ivCamera;
     TextView tvName, tvState;
     RecyclerView recyclerView;
-    ImageButton ibMenu;
+    Button btMenu;
     private GroupMessagesForRecyclerViewAdapter groupMessagesForRecyclerViewAdapter;
     private LinearLayoutManager linearLayoutManager;
 
     private ImageView ivSend;
     private EditText etMessage;
+
+    private ProgressDialog loadingProgressBar = null;
+
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         int position = -1;
@@ -80,7 +93,7 @@ public class GroupConversationActivity extends AppCompatActivity implements
                 break;
             case 2:
                 // copy text
-                if (position!= -1){
+                if (position != -1) {
                     ClipboardManager clipboard = (ClipboardManager) GroupConversationActivity.this.getSystemService(Context.CLIPBOARD_SERVICE);
                     String text = groupMessagesForRecyclerViewAdapter.getItem(position).getMessage();
                     ClipData clip = android.content.ClipData.newPlainText("Copied Text", text);
@@ -91,48 +104,51 @@ public class GroupConversationActivity extends AppCompatActivity implements
                 break;
             case 3:
                 //delete message
-//                if (position!= -1){
-//                    final int finalPosition = position;
-//                    if (position==groupMessagesForRecyclerViewAdapter.getItemCount()-1 && groupMessagesForRecyclerViewAdapter.getItemCount()>1){
-////                        Log.e("----------index", position+"");
-//                        Message prevMessage = groupMessagesForRecyclerViewAdapter.getItem(position-1);
-//
-//                        databaseReference.child(Constant.CHILD_FRIENDLISTS).child(myUid).child(clientUid).
-//                                child(Constant.CHILD_LASTMESSAGE).setValue(new LastMessage(prevMessage.getMessage(), prevMessage.getTime(), true, prevMessage.getSenderUid()), new DatabaseReference.CompletionListener() {
-//                            @Override
-//                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-//                                if(databaseError!= null){
-//                                    Toast.makeText(GroupConversationActivity.this,
-//                                            getString(R.string.announce_cant_delete_msg),Toast.LENGTH_SHORT)
-//                                            .show();
-//                                }
-//                                else{
+                if (position != -1) {
+                    Message currentMessage = groupMessagesForRecyclerViewAdapter.getItem(position);
+                    if (!currentMessage.getSenderUid().equals(myUid)){
+                        Toast.makeText(this, "You can only delete your message!", Toast.LENGTH_SHORT).show();
+                        break;
+                    }
+
+                    final int finalPosition = position;
+                    if (position == groupMessagesForRecyclerViewAdapter.getItemCount() - 1
+                            && groupMessagesForRecyclerViewAdapter.getItemCount() > 1) {
+//                        Log.e("----------index", position+"");
+                        Message prevMessage = groupMessagesForRecyclerViewAdapter.getItem(position - 1);
+
+                        databaseReference.child(Constant.CHILD_GROUPCHAT+"/"+groupChatData.getUid()+"/"+Constant.CHILD_LASTMESSAGE).setValue(new LastMessage(prevMessage.getMessage(), prevMessage.getTime(), true, prevMessage.getSenderUid()), new DatabaseReference.CompletionListener() {
+                            @Override
+                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                if (databaseError != null) {
+                                    Toast.makeText(GroupConversationActivity.this, getString(R.string.announce_cant_delete_msg), Toast.LENGTH_SHORT).show();
+                                } else {
+                                    deleteMessage(finalPosition);
+                                }
+                            }
+                        });
+                    } else if (position == 0 && groupMessagesForRecyclerViewAdapter.getItemCount() == 1) {
+                        databaseReference.child(Constant.CHILD_GROUPCHAT+"/"+groupChatData.getUid()).removeValue(new DatabaseReference.CompletionListener() {
+                            @Override
+                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                if (databaseError != null) {
+                                    Toast.makeText(GroupConversationActivity.this, getString(R.string.announce_cant_delete_msg), Toast.LENGTH_SHORT).show();
+                                } else {
 //                                    deleteMessage(finalPosition);
-//                                }
-//                            }
-//                        });
-//                    }else
-//                    if (position==0){
-//                        databaseReference.child(Constant.CHILD_FRIENDLISTS).child(myUid).child(clientUid).
-//                                child(Constant.CHILD_LASTMESSAGE).removeValue(new DatabaseReference.CompletionListener() {
-//                            @Override
-//                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-//                                if(databaseError!= null){
-//                                    Toast.makeText(GroupConversationActivity.this,getString(R.string.announce_cant_delete_msg),Toast.LENGTH_SHORT).show();
-//                                }
-//                                else{
-//                                    deleteMessage(finalPosition);
-//                                }
-//                            }
-//                        });
-//                    }else {
-//                        deleteMessage(position);
-//                    }
-//                }
+                                    finish();
+                                }
+                            }
+                        });
+                    }
+                } else {
+                    deleteMessage(position);
+                }
+
                 break;
         }
         return super.onContextItemSelected(item);
     }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -146,23 +162,23 @@ public class GroupConversationActivity extends AppCompatActivity implements
                 R.layout.item_message_onetoone,
                 MessageViewHolder.class,
                 databaseReference.child(Constant.CHILD_GROUPCHAT).child(groupChatData.getUid()).child(Constant.KEY_MESSAGES).getRef(),
-                GroupConversationActivity.this,  groupChatData, myUid);
+                GroupConversationActivity.this, groupChatData, myUid);
 
         groupMessagesForRecyclerViewAdapter.registerAdapterDataObserver(
                 new RecyclerView.AdapterDataObserver() {
-            @Override
-            public void onItemRangeInserted(int positionStart, int itemCount) {
-                super.onItemRangeInserted(positionStart, itemCount);
-                int friendlyMessageCount = groupMessagesForRecyclerViewAdapter.getItemCount();
-                int lastVisiblePosition =linearLayoutManager.findLastCompletelyVisibleItemPosition();
-                // If the recycler view is initially being loaded or the user is at the bottom of the list, scroll
-                // to the bottom of the list to show the newly added message.
-                if (lastVisiblePosition == -1 ||
-                        (positionStart >= (friendlyMessageCount - 1) && lastVisiblePosition == (positionStart - 1))) {
-                    recyclerView.scrollToPosition(positionStart);
-                }
-            }
-        });
+                    @Override
+                    public void onItemRangeInserted(int positionStart, int itemCount) {
+                        super.onItemRangeInserted(positionStart, itemCount);
+                        int friendlyMessageCount = groupMessagesForRecyclerViewAdapter.getItemCount();
+                        int lastVisiblePosition = linearLayoutManager.findLastCompletelyVisibleItemPosition();
+                        // If the recycler view is initially being loaded or the user is at the bottom of the list, scroll
+                        // to the bottom of the list to show the newly added message.
+                        if (lastVisiblePosition == -1 ||
+                                (positionStart >= (friendlyMessageCount - 1) && lastVisiblePosition == (positionStart - 1))) {
+                            recyclerView.scrollToPosition(positionStart);
+                        }
+                    }
+                });
 
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.hasFixedSize();
@@ -181,36 +197,41 @@ public class GroupConversationActivity extends AppCompatActivity implements
                 }
             });
         }
+        loadingProgressBar = new ProgressDialog(this);
+        loadingProgressBar.setCancelable(false);
+        loadingProgressBar.setMessage(getString(R.string.txt_uploading));
+        loadingProgressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
     }
-    public void deleteMessage(int position){
-        final MessageViewHolder messageViewHolder= (MessageViewHolder) recyclerView.findViewHolderForAdapterPosition(position);
+
+    public void deleteMessage(int position) {
+        final MessageViewHolder messageViewHolder = (MessageViewHolder) recyclerView.findViewHolderForAdapterPosition(position);
         messageViewHolder.llAllComponent.setVisibility(View.GONE);
         groupMessagesForRecyclerViewAdapter.getRef(position).removeValue(new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                if (databaseError!= null){
-                    if(GroupConversationActivity.this!=null)
-                        Toast.makeText(GroupConversationActivity.this,getString(R.string.announce_cant_delete_msg), Toast.LENGTH_SHORT).show();
+                if (databaseError != null) {
+                    if (GroupConversationActivity.this != null)
+                        Toast.makeText(GroupConversationActivity.this, getString(R.string.announce_cant_delete_msg), Toast.LENGTH_SHORT).show();
                     messageViewHolder.llAllComponent.setVisibility(View.VISIBLE);
-                }
-                else{
-                    if (GroupConversationActivity.this!= null)
+                } else {
+                    if (GroupConversationActivity.this != null)
                         Toast.makeText(GroupConversationActivity.this, R.string.announce_msg_is_deleted, Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
     }
-    public void initViews(){
+
+    public void initViews() {
         ibBack = (ImageButton) findViewById(R.id.ibBack);
         ivCamera = (ImageView) findViewById(R.id.ivCamera);
         ivMap = (ImageView) findViewById(R.id.ivLocation);
         ivSend = (ImageView) findViewById(R.id.ivSend);
         tvName = (TextView) findViewById(R.id.tvName);
-        tvState= (TextView) findViewById(R.id.tvState);
+        tvState = (TextView) findViewById(R.id.tvState);
         etMessage = (EditText) findViewById(R.id.etMessage);
-        recyclerView= (RecyclerView) findViewById(R.id.messageRecyclerView);
-        ibMenu = (ImageButton) findViewById(R.id.ibMenu);
+        recyclerView = (RecyclerView) findViewById(R.id.messageRecyclerView);
+        btMenu = (Button) findViewById(R.id.btMenu);
 
         //set on click button
         ivMap.setOnClickListener(this);
@@ -219,10 +240,10 @@ public class GroupConversationActivity extends AppCompatActivity implements
         ivSend.setOnClickListener(this);
 
         ivSend.setEnabled(false);
-        ibMenu.setOnClickListener(this);
+        btMenu.setOnClickListener(this);
 //        if (groupChatData!=null)
-            if (groupChatData.getName()!=null)
-                tvName.setText(groupChatData.getName());
+        if (groupChatData.getName() != null)
+            tvName.setText(groupChatData.getName());
         etMessage.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -232,8 +253,7 @@ public class GroupConversationActivity extends AppCompatActivity implements
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if (charSequence.toString().trim().length() > 0) {
                     ivSend.setEnabled(true);
-                }
-                else {
+                } else {
                     ivSend.setEnabled(false);
                 }
             }
@@ -245,39 +265,39 @@ public class GroupConversationActivity extends AppCompatActivity implements
 
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference();
-        linearLayoutManager= new LinearLayoutManager(this);
+        linearLayoutManager = new LinearLayoutManager(this);
         updateView();
 
     }
-    public void getDataIntent(){
+
+    public void getDataIntent() {
         Intent intent = getIntent();
-        groupChatData=(GroupChatData) intent.getSerializableExtra(Constant.GROUP_CHAT_DATA);
+        groupChatData = (GroupChatData) intent.getSerializableExtra(Constant.GROUP_CHAT_DATA);
 
         myUid = intent.getStringExtra(Constant.MY_UID);
 
     }
 
-    public void getClientInfo(){
+    public void getClientInfo() {
         ValueEventListener valueEventListenerClientInfo = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.hasChild(clientUid)){
-                    String name="", state="";
-                    Boolean connection= false;
-                    long lastOnline=0;
+                if (dataSnapshot.hasChild(clientUid)) {
+                    String name = "", state = "";
+                    Boolean connection = false;
+                    long lastOnline = 0;
                     if (dataSnapshot.child(clientUid).hasChild(Constant.KEY_NAME))
-                        name= dataSnapshot.child(clientUid).child(Constant.KEY_NAME).getValue().toString();
-                    if (tvName!= null)
+                        name = dataSnapshot.child(clientUid).child(Constant.KEY_NAME).getValue().toString();
+                    if (tvName != null)
                         tvName.setText(name);
                     if (dataSnapshot.child(clientUid).hasChild(Constant.KEY_CONNECTION))
-                        connection= (Boolean) dataSnapshot.child(clientUid).child(Constant.KEY_CONNECTION).getValue();
+                        connection = (Boolean) dataSnapshot.child(clientUid).child(Constant.KEY_CONNECTION).getValue();
                     if (dataSnapshot.child(clientUid).hasChild(Constant.KEY_LASTONLINE))
-                        lastOnline= Long.parseLong(dataSnapshot.child(clientUid).child(Constant.KEY_LASTONLINE).getValue().toString());
-                    if (connection==false){
-                        state=getString(R.string.txt_state)+ " "+CommonMethod.diffTime(getApplicationContext(), lastOnline);
-                    }
-                    else state = "Online";
-                    if(tvState!= null)
+                        lastOnline = Long.parseLong(dataSnapshot.child(clientUid).child(Constant.KEY_LASTONLINE).getValue().toString());
+                    if (connection == false) {
+                        state = getString(R.string.txt_state) + " " + CommonMethod.diffTime(getApplicationContext(), lastOnline);
+                    } else state = "Online";
+                    if (tvState != null)
                         tvState.setText(state);
 
                 }
@@ -290,64 +310,24 @@ public class GroupConversationActivity extends AppCompatActivity implements
         };
         databaseReference.child(Constant.CHILD_GROUPCHAT).addValueEventListener(valueEventListenerClientInfo);
     }
+
     @Override
     public void onClick(View view) {
 //        view.startAnimation(Constant.buttonClick);
         CommonMethod.showAnimation(view, GroupConversationActivity.this);
         if (view == ibBack)
             finish();
-        else if (view == ivSend){
-            //update in CHILD_CHATONETOONE and CHILD_LASTMESSAGE
+        else if (view == ivSend) {
+            pushMessage("");
 
-            if (etMessage.getText().toString().trim().equals("")){
-                Toast.makeText(GroupConversationActivity.this, R.string.announce_empty_msg, Toast.LENGTH_SHORT).show();
-            }else{
-                databaseReference.child(Constant.CHILD_GROUPCHAT).child(groupChatData.getUid()).child(Constant.KEY_MESSAGES).push().setValue(new Message(etMessage.getText().toString().trim(), myUid), new DatabaseReference.CompletionListener() {
-                    @Override
-                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                        if(databaseError!= null){
-                            Log.e("completion error", databaseError.getDetails());
-                            if (GroupConversationActivity.this!=null)
-                                Toast.makeText(GroupConversationActivity.this, R.string.announce_cant_send_msg, Toast.LENGTH_SHORT).show();
-                        }
-                        else{
-                            if (etMessage!=null)
-                                etMessage.setText("");
-                        }
-                    }
-                });
-
-                databaseReference.child(Constant.CHILD_GROUPCHAT).child(groupChatData.getUid()).child(Constant.CHILD_LASTMESSAGE).setValue(new LastMessage(etMessage.getText().toString().trim(), myUid, true), new DatabaseReference.CompletionListener() {
-                    @Override
-                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                        if(databaseError!= null){
-                            Log.e("completion error", databaseError.getDetails());
-                            if (GroupConversationActivity.this!=null)
-                                Toast.makeText(GroupConversationActivity.this, R.string.announce_cant_send_msg, Toast.LENGTH_SHORT).show();
-                        }
-                        else{
-                            if (etMessage!=null)
-                                etMessage.setText("");
-                        }
-                    }
-                });
-                for (GroupChatData.Participant participant: groupChatData.getParticipants()){
-                    String uid = participant.getUid();
-                    if (uid.equals(myUid)){
-                        databaseReference.child(Constant.CHILD_GROUPCHAT).child(groupChatData.getUid())
-                                .child(Constant.CHILD_USERS).child(myUid).child(Constant.KEY_STATUS).setValue(true);
-                    }
-                    else databaseReference.child(Constant.CHILD_GROUPCHAT).child(groupChatData.getUid())
-                            .child(Constant.CHILD_USERS).child(uid).child(Constant.KEY_STATUS).setValue(false);
-                }
-            }
-
-        }
-        else if (view == ibMenu){
+        } else if (view == btMenu) {
             showPopup(view);
+        } else if (view == ivCamera) {
+            onLaunchCamera();
         }
     }
-    private void updateView(){
+
+    private void updateView() {
         Thread t = new Thread() {
 
             @Override
@@ -391,10 +371,9 @@ public class GroupConversationActivity extends AppCompatActivity implements
                                         .child(myUid).child(Constant.KEY_STATUS).setValue(false, new DatabaseReference.CompletionListener() {
                                     @Override
                                     public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                                        if (databaseError!= null){
+                                        if (databaseError != null) {
 
-                                        }
-                                        else{
+                                        } else {
                                             finish();
                                         }
                                     }
@@ -417,6 +396,7 @@ public class GroupConversationActivity extends AppCompatActivity implements
         }
 
     }
+
     public void showPopup(View v) {
         PopupMenu popup = new PopupMenu(this, v);
         popup.setOnMenuItemClickListener(this);
@@ -428,12 +408,89 @@ public class GroupConversationActivity extends AppCompatActivity implements
 
     @Override
     public void onComplete(String name) {
-        if (name!= null){
-            if (tvName!=null)
+        if (name != null) {
+            if (tvName != null)
                 tvName.setText(name);
-        if (groupChatData!=null)
-            groupChatData.setName(name);
+            if (groupChatData != null)
+                groupChatData.setName(name);
         }
+    }
+
+    void onLaunchCamera() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            postDataToFirebase(imageBitmap);
+        }
+    }
+
+    private void postDataToFirebase(Bitmap bitmap) {
+        if (bitmap != null) {
+            loadingProgressBar.show();
+            String fileName = "" + bitmap.hashCode();
+            StorageReference filepathRef =
+                    FirebaseStorage.getInstance().getReference("images" + "/" + fileName);
+
+            //compress image
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 80, byteArrayOutputStream);
+            byte[] data = byteArrayOutputStream.toByteArray();
+
+            UploadTask uploadTask = filepathRef.putBytes(data);
+
+            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                    @SuppressWarnings("VisibleForTests")
+                    final Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                    pushMessage(downloadUrl.toString());
+                    loadingProgressBar.dismiss();
+
+                }
+            });
+
+        }
+    }
+
+    private void pushMessage(String photoUrl) {
+        String msg = etMessage.getText().toString().trim();
+        if (msg.equals("") && photoUrl.equals("")) {
+            Toast.makeText(GroupConversationActivity.this, R.string.announce_empty_msg,
+                    Toast.LENGTH_SHORT).show();
+        } else {
+            //update in CHILD_CHATONETOONE and CHILD_LASTMESSAGE
+            if (msg.equals(""))
+                msg = "Image";
+            databaseReference.child(Constant.CHILD_GROUPCHAT + "/" +
+                    groupChatData.getUid() + "/" + Constant.KEY_MESSAGES
+            ).push().
+                    setValue(new Message(msg, myUid));
+
+            databaseReference.child(Constant.CHILD_GROUPCHAT + "/" +
+                    groupChatData.getUid() + "/" + Constant.CHILD_LASTMESSAGE).
+                    setValue(new LastMessage(msg, myUid, true));
+            for (GroupChatData.Participant participant : groupChatData.getParticipants()) {
+                String uid = participant.getUid();
+
+                if (uid.equals(myUid)) {
+                    databaseReference.child(Constant.CHILD_GROUPCHAT + "/" + groupChatData.getUid()
+                            + "/" + Constant.CHILD_USERS + "/" + myUid + "/" + Constant.KEY_STATUS).setValue(true);
+                } else
+                    databaseReference.child(Constant.CHILD_GROUPCHAT + "/" + groupChatData.getUid() + "/" + Constant.CHILD_USERS + "/" +
+                            uid + "/" + Constant.KEY_STATUS).setValue(false);
+
+            }
+        }
+        etMessage.setText("");
     }
 }
 

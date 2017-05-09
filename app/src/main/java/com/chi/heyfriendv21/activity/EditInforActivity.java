@@ -183,7 +183,7 @@ public class EditInforActivity extends AppCompatActivity implements View.OnClick
     boolean isValidDate(String dateString){
         Date date = null;
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+            SimpleDateFormat sdf = new SimpleDateFormat("d-M-yyyy");
             date = sdf.parse(dateString);
             if (!dateString.equals(sdf.format(date))) {
                 date = null;
@@ -193,10 +193,10 @@ public class EditInforActivity extends AppCompatActivity implements View.OnClick
         }
         if (date == null) {
             // Invalid date format
-            return true;
+            return false;
         } else {
             // Valid date format
-            return false;
+            return true;
         }
     }
 }

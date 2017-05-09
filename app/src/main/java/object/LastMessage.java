@@ -12,16 +12,18 @@ public class LastMessage implements Serializable {
     private long time;
     private boolean status;
     private String senderUid;
+    //default
     public LastMessage(){
 
     }
-    //default
+
     public LastMessage(String content, long time, boolean status, String senderUid) {
         this.content = content;
         this.time = time;
         this.status = status;
         this.senderUid = senderUid;
     }
+
     public LastMessage(String content, String senderUid) {
         this.content = content;
         this.time = CommonMethod.getCurrentTime();

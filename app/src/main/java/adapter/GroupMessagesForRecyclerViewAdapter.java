@@ -1,6 +1,7 @@
 package adapter;
 
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.graphics.Color;
@@ -22,6 +23,7 @@ import java.util.Map;
 import common.CommonMethod;
 import common.Constant;
 import common.MessageViewHolder;
+import dialog.ImageDialogFragment;
 import object.GroupChatData;
 import object.Message;
 
@@ -29,7 +31,7 @@ import object.Message;
 
 public class GroupMessagesForRecyclerViewAdapter extends FirebaseRecyclerAdapter<Message,MessageViewHolder> {
 
-    private Context context;
+    private Activity activity;
     private int position;
     private String myUid;
     private DatabaseReference ref;
@@ -44,10 +46,10 @@ public class GroupMessagesForRecyclerViewAdapter extends FirebaseRecyclerAdapter
     }
 
     public GroupMessagesForRecyclerViewAdapter(Class<Message> modelClass, int modelLayout,
-                                               Class<MessageViewHolder> viewHolderClass, DatabaseReference ref, Context context, GroupChatData groupChatData, String myUid) {
+                                               Class<MessageViewHolder> viewHolderClass, DatabaseReference ref,Activity activity, GroupChatData groupChatData, String myUid) {
         super(modelClass, modelLayout, viewHolderClass, ref);
         this.ref = ref;
-        this.context = context;
+        this.activity = activity;
         this.myUid = myUid;
         this.groupChatData = groupChatData;
         mapPhotoUrl = new HashMap<>();
@@ -59,7 +61,7 @@ public class GroupMessagesForRecyclerViewAdapter extends FirebaseRecyclerAdapter
     }
 
     @Override
-    protected void populateViewHolder(MessageViewHolder viewHolder, Message message, final int position) {
+    protected void populateViewHolder(MessageViewHolder viewHolder, final Message message, final int position) {
         //dont reuse view
         viewHolder.setIsRecyclable(false);
         //get senderUid to present data to recyclerview
@@ -69,7 +71,7 @@ public class GroupMessagesForRecyclerViewAdapter extends FirebaseRecyclerAdapter
             //TODO: update state of last message(useless)
             ref.getRoot().child(Constant.CHILD_GROUPCHAT).child(groupChatData.getUid())
                     .child(Constant.CHILD_USERS).child(myUid).child(Constant.KEY_STATUS).setValue(true);
-            NotificationManager notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationManager notificationManager = (NotificationManager)activity.getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.cancel(groupChatData.getUid().hashCode());
         }
 
@@ -87,29 +89,33 @@ public class GroupMessagesForRecyclerViewAdapter extends FirebaseRecyclerAdapter
 //                    Log.e(message.getTime()+ "--"+ CommonMethod.convertLongToTime(message.getTime())+ "--" +CommonMethod.convertLongToTime(getItem(position-1).getTime())+"//"+ getItem(position-1).getTime(), diffTime+"");
         }
         else viewHolder.tvDateSending.setText(CommonMethod.convertLongToTime(message.getTime()));
-        viewHolder.tvMessage.setText(message.getMessage());
+
+        if (message.getMessage().equals("Image")) {
+            viewHolder.tvMessage.setVisibility(View.GONE);
+        } else viewHolder.tvMessage.setText(message.getMessage());
+
+        if (!message.getPhotoUrl().equals("")) {
+            Glide.with(activity).load(message.getPhotoUrl()).into(viewHolder.ivPhoto);
+        } else viewHolder.ivPhoto.setVisibility(View.GONE);
 
         if (!senderUid.equals(myUid)){
             lp.gravity= Gravity.LEFT;
             String clientPhotoURL= mapPhotoUrl.get(senderUid);
 
-//            for (GroupChatData.Participant participant : groupChatData.getParticipants()){
-//                if (participant.getUid().equals(message.getSenderUid())){
-//                    clientPhotoURL= participant.getPhotoUrl();
-//                }
-//            }
             viewHolder.linearLayout.setLayoutParams(lp);
             if (position>0 && !getItem(position-1).getSenderUid().equals(myUid)){
                 viewHolder.ivMessenger.setImageResource(android.R.color.transparent);
                 long diffTime =( message.getTime()- getItem(position-1).getTime());
-                if (diffTime<600000){
-                    viewHolder.tvMessage.setBackgroundResource(R.drawable.receive_second);
+                if (diffTime < 600000) {
+//                    viewHolder.tvMessage.setBackgroundResource(R.drawable.receive_second);
+                    viewHolder.llContentMsg.setBackgroundResource(R.drawable.receive_second);
+                } else {
+                    viewHolder.llContentMsg.setBackgroundResource(R.drawable.receive_first);
                 }
-                else viewHolder.tvMessage.setBackgroundResource(R.drawable.receive_first);
             }
             else {
                 viewHolder.tvMessage.setBackgroundResource(R.drawable.receive_first);
-                Glide.with(context).load(clientPhotoURL).into(viewHolder.ivMessenger);
+                Glide.with(activity).load(clientPhotoURL).into(viewHolder.ivMessenger);
             }
 
 //                viewHolder.tvDateSending.setText(clientName);
@@ -124,11 +130,13 @@ public class GroupMessagesForRecyclerViewAdapter extends FirebaseRecyclerAdapter
             viewHolder.ivMessenger.setImageResource(android.R.color.transparent);
             if (position>0 && getItem(position-1).getSenderUid().equals(myUid)){
                 long diffTime =( message.getTime()- getItem(position-1).getTime());
-                if (diffTime<600000){
-                    viewHolder.tvMessage.setBackgroundResource(R.drawable.sending_second);
+                if (diffTime < 600000) {
+//                    viewHolder.tvMessage.setBackgroundResource(R.drawable.sending_second);
+                    viewHolder.llContentMsg.setBackgroundResource(R.drawable.sending_second);
+                } else{
+//                    viewHolder.tvMessage.setBackgroundResource(R.drawable.sending_first);
+                    viewHolder.llContentMsg.setBackgroundResource(R.drawable.sending_first);
                 }
-                else viewHolder.tvMessage.setBackgroundResource(R.drawable.sending_first);
-
             }
             else viewHolder.tvMessage.setBackgroundResource(R.drawable.sending_first);
 // viewHolder.tvMessage.setBackgroundResource(R.drawable.bubble_out);
@@ -143,6 +151,28 @@ public class GroupMessagesForRecyclerViewAdapter extends FirebaseRecyclerAdapter
                 return false;
             }
 
+        });
+        viewHolder.llAllComponent.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                setPosition(position);
+                return false;
+            }
+
+        });
+        viewHolder.ivPhoto.setOnLongClickListener(new View.OnLongClickListener(){
+            @Override
+            public boolean onLongClick(View view) {
+                setPosition(position);
+                return false;
+            }
+        });
+        viewHolder.ivPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ImageDialogFragment dialog = new ImageDialogFragment(message.getPhotoUrl());
+                dialog.show(activity.getFragmentManager(), "");
+            }
         });
     }
 

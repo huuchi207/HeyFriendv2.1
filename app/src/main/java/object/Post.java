@@ -2,18 +2,29 @@ package object;
 
 
 
-public class News {
+public class Post {
     private String urlAvatar;
     private long time;
     private String name;
     private String content;
     private String urlImage;
 
-    public News(String urlAvatar, long time, String name, String content) {
+    public Post() {
+    }
+
+    public Post(String urlAvatar, long time, String name, String content) {
         this.urlAvatar = urlAvatar;
         this.time = time;
         this.name = name;
         this.content = content;
+    }
+    public Post(String urlAvatar, long time, String name, String content, String urlImage) {
+        this.urlAvatar = urlAvatar;
+        this.time = time;
+        this.name = name;
+        this.content = content;
+        this.urlImage = urlImage;
+
     }
 
     public String getUrlAvatar() {
@@ -56,12 +67,8 @@ public class News {
         this.urlImage = urlImage;
     }
 
-    public News(String urlAvatar, long time, String name, String content, String urlImage) {
-        this.urlAvatar = urlAvatar;
-        this.time = time;
-        this.name = name;
-        this.content = content;
-        this.urlImage = urlImage;
-
+    public String toString(){
+        return "name: "+ name+"\n"+ "content: " + content;
     }
+
 }

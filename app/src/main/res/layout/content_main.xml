@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.chi.heyfriendv21.activity.MainActivity"
     tools:showIn="@layout/app_bar_main">
@@ -128,5 +129,43 @@
         android:id="@+id/fragment_container"
         android:layout_alignParentBottom="true"
         />
+    <View android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:id="@+id/viewBlur"
+        android:background="#327c7a7a"
+        android:visibility="gone"/>
+    <com.getbase.floatingactionbutton.FloatingActionsMenu
+        android:id="@+id/multiple_actions_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        fab:fab_addButtonColorNormal="@color/colorPrimary"
+        fab:fab_addButtonColorPressed="#41732f"
+        fab:fab_addButtonStrokeVisible="false"
+        fab:fab_expandDirection="up"
+        fab:fab_labelStyle="@style/menu_labels_style"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        >
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/fabNew"
+            fab:fab_size="normal"
+            fab:fab_title="Something new"
+            fab:fab_colorNormal="#ffea00"
+            fab:fab_colorPressed="#8e873a"/>
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            fab:fab_colorNormal="#db4c32"
+            fab:fab_colorPressed="#d18172"
+            fab:fab_title="Message"
+            android:id="@+id/fabMessage"
+            fab:fab_size="normal"/>
+
+    </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
 </android.support.percent.PercentRelativeLayout>

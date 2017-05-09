@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.design.internal.NavigationMenuView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.percent.PercentRelativeLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -15,6 +16,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -30,11 +32,15 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.balysv.materialripple.MaterialRippleLayout;
+import com.bumptech.glide.Glide;
 import com.chi.heyfriendv21.R;
 import com.firebase.client.Firebase;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -52,7 +58,9 @@ import adapter.SearchFriendAdapter;
 import common.CommonMethod;
 import common.Constant;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import dialog.GroupChatCreationDialogFragment;
+import dialog.NewStatusDialogFragment;
 import dialog.UserInfoDialogFragment;
 import fragment.InvitationFragment;
 import fragment.MessageFragment;
@@ -71,42 +79,47 @@ public class MainActivity extends AppCompatActivity
     private View shadowActionBar;
     private MaterialRippleLayout rippleLayoutForActionButton, rippleLayoutForSearchButton;
 //    private ArrayList<String> allUsers;
-    ArrayList<User> allUsers= new ArrayList<>();
-    Map<String, Boolean> isAFriend;
-    SearchFriendAdapter searchFriendAdapter;
-    private FloatingActionButton fab;
+   private  ArrayList<User> allUsers= new ArrayList<>();
+    private Map<String, Boolean> isAFriend;
+    private SearchFriendAdapter searchFriendAdapter;
+
     private NavigationView navigationView;
 
-    ListView lvFriendsOnline, lvFriendsOffline;
-    ListFriendAdapter friendsOnlineAdapter, friendsOfflineAdapter;
-    ArrayList friendsOnline, friendsOffline;
+    private ListView lvFriendsOnline, lvFriendsOffline;
+    private ListFriendAdapter friendsOnlineAdapter, friendsOfflineAdapter;
+    private ArrayList friendsOnline, friendsOffline;
 
-    TextView tvTotalFriends;
+    private TextView tvTotalFriends;
+    private ProgressBar progressBarListFriend;
+    // FAB
+    private com.getbase.floatingactionbutton.FloatingActionsMenu floatingActionsMenuFAB;
+    private com.getbase.floatingactionbutton.FloatingActionButton fabNew, fabMessage;
+    private View viewBlur;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);
-        fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-                FirebaseUser firebaseUser= CommonMethod.getCurrentFirebaseUser();
-                if(firebaseUser!=null){
-                    GroupChatCreationDialogFragment dialogFragment=
-                            new GroupChatCreationDialogFragment(
-                                    firebaseUser.getUid(),
-                                    firebaseUser.getDisplayName(),
-                                    firebaseUser.getPhotoUrl().toString()
-                            );
-                    dialogFragment.show(getFragmentManager(), "");
-                }
-
-            }
-        });
+//        fab = (FloatingActionButton) findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+////                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+////                        .setAction("Action", null).show();
+//                FirebaseUser firebaseUser= CommonMethod.getCurrentFirebaseUser();
+//                if(firebaseUser!=null){
+//                    GroupChatCreationDialogFragment dialogFragment=
+//                            new GroupChatCreationDialogFragment(
+//                                    firebaseUser.getUid(),
+//                                    firebaseUser.getDisplayName(),
+//                                    firebaseUser.getPhotoUrl().toString()
+//                            );
+//                    dialogFragment.show(getFragmentManager(), "");
+//                }
+//
+//            }
+//        });
 
 //        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 //        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -182,11 +195,11 @@ public class MainActivity extends AppCompatActivity
         rippleLayoutForActionButton = (MaterialRippleLayout) findViewById(R.id.ripple_view_action_button);
         rippleLayoutForSearchButton = (MaterialRippleLayout) findViewById(R.id.ripple_view_search_button);
         //init view for friendlist
-        //------------------------
         lvFriendsOffline = (ListView) findViewById(R.id.list_friend_offline);
         lvFriendsOnline = (ListView) findViewById(R.id.list_friend_online);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         tvTotalFriends = (TextView) findViewById(R.id.tvTotalFriends);
+        progressBarListFriend = (ProgressBar) findViewById(R.id.progress_bar_list_friend);
         isAFriend = new HashMap<>();
         friendsOffline = new ArrayList();
         friendsOnline = new ArrayList();
@@ -196,17 +209,53 @@ public class MainActivity extends AppCompatActivity
 
         lvFriendsOffline.setAdapter(friendsOfflineAdapter);
         lvFriendsOnline.setAdapter(friendsOnlineAdapter);
-        //---------------------------------------
+        //-----------------------------
         //init view for search friend
         searchFriendAdapter = new SearchFriendAdapter(this, R.layout.item_search_friend,allUsers);
+        //-----------------------------
+        //view for fab
+        floatingActionsMenuFAB = (com.getbase.floatingactionbutton.FloatingActionsMenu)
+                findViewById(R.id.multiple_actions_fab);
+        fabMessage = (com.getbase.floatingactionbutton.FloatingActionButton)
+                findViewById(R.id.fabMessage);
+        fabNew =(com.getbase.floatingactionbutton.FloatingActionButton)
+                findViewById(R.id.fabNew);
+        viewBlur=  findViewById(R.id.viewBlur);
+        viewBlur.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if(floatingActionsMenuFAB.isExpanded())
+                    floatingActionsMenuFAB.collapse();
+                viewBlur.setVisibility(View.GONE);
+                return true;
+            }
+        });
+        floatingActionsMenuFAB.setOnFloatingActionsMenuUpdateListener(new FloatingActionsMenu.OnFloatingActionsMenuUpdateListener() {
+            @Override
+            public void onMenuExpanded() {
+                viewBlur.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onMenuCollapsed() {
+                viewBlur.setVisibility(View.GONE);
+            }
+        });
+
+        //-----------------------------
+
         //assign onClickListener
         btAction.setOnClickListener(this);
         ibNav.setOnClickListener(this);
         ibSearch.setOnClickListener(this);
+        fabNew.setOnClickListener(this);
+        fabMessage.setOnClickListener(this);
         //set current fragment
         switchFragmentById(R.id.nav_timeline);
         //get data from server
         getAllUser();
+        //
+        setDataToNavHeader();
 
     }
 
@@ -272,29 +321,30 @@ public class MainActivity extends AppCompatActivity
             shadowActionBar.setVisibility(View.VISIBLE);
             rippleLayoutForActionButton.setVisibility(View.VISIBLE);
             rippleLayoutForSearchButton.setVisibility(View.GONE);
-            fab.setVisibility(View.GONE);
+            floatingActionsMenuFAB.setVisibility(View.VISIBLE);
         }
         else if (id == R.id.nav_conversation){
             showFragment(new MessageFragment());
             shadowActionBar.setVisibility(View.GONE);
             rippleLayoutForActionButton.setVisibility(View.VISIBLE);
             rippleLayoutForSearchButton.setVisibility(View.GONE);
-            fab.setVisibility(View.VISIBLE);
+            floatingActionsMenuFAB.setVisibility(View.VISIBLE);
         }
         else if (id== R.id.nav_invitation){
             showFragment(new InvitationFragment());
             shadowActionBar.setVisibility(View.VISIBLE);
             rippleLayoutForActionButton.setVisibility(View.GONE);
             rippleLayoutForSearchButton.setVisibility(View.VISIBLE);
-            fab.setVisibility(View.GONE);
+            floatingActionsMenuFAB.setVisibility(View.GONE);
         }
         else if (id==R.id.nav_setting){
             showFragment(new SettingFragment());
             shadowActionBar.setVisibility(View.VISIBLE);
             rippleLayoutForActionButton.setVisibility(View.GONE);
             rippleLayoutForSearchButton.setVisibility(View.GONE);
-            fab.setVisibility(View.GONE);
+            floatingActionsMenuFAB.setVisibility(View.GONE);
         }
+
     }
 
     @Override
@@ -306,6 +356,23 @@ public class MainActivity extends AppCompatActivity
         }
         else if (view == ibSearch){
             loadToolBarSearch();
+        }
+        else if (view== fabMessage){
+            FirebaseUser firebaseUser= CommonMethod.getCurrentFirebaseUser();
+                if(firebaseUser!=null){
+                    GroupChatCreationDialogFragment dialogFragment=
+                            new GroupChatCreationDialogFragment(
+                                    firebaseUser.getUid(),
+                                    firebaseUser.getDisplayName(),
+                                    firebaseUser.getPhotoUrl().toString()
+                            );
+                    dialogFragment.show(getFragmentManager(), "");
+                }
+        }
+        else if (view == fabNew){
+
+            NewStatusDialogFragment newStatusDialogFragment = new NewStatusDialogFragment();
+            newStatusDialogFragment.show(getFragmentManager(), "");
         }
     }
     public void loadToolBarSearch() {
@@ -475,6 +542,17 @@ public class MainActivity extends AppCompatActivity
 
                     }
                 }
+                //for progressbar
+                if (allFriends.size() == friendsOnline.size()){
+                    progressBarListFriend.setVisibility(View.GONE);
+                }
+                else
+                if (allFriends.size()!= 0){
+//                    Log.e(TAG, "progressbar "+(int)(100*(double)friendsOnline.size()/(double)allFriends.size()) );
+                    progressBarListFriend.setProgress((int)(100*(double)friendsOnline.size()/(double)allFriends.size()));
+                }
+                else progressBarListFriend.setProgress(0);
+                progressBarListFriend.invalidate();
                 friendsOnlineAdapter.notifyDataSetChanged();
                 friendsOfflineAdapter.notifyDataSetChanged();
             }
@@ -485,6 +563,22 @@ public class MainActivity extends AppCompatActivity
             }
         });
     }
+    private void setDataToNavHeader(){
+        View header = navigationView.getHeaderView(0);
+/*View view=navigationView.inflateHeaderView(R.layout.nav_header_main);*/
+        TextView tvName = (TextView) header.findViewById(R.id.tvName_NavHeaderMain);
+        TextView tvEmail = (TextView) header.findViewById(R.id.tvEmail_NavHeaderMain);
 
-
+        CircleImageView civAvatar = (CircleImageView) header.findViewById(R.id.ivAvatar_NavHeaderMain);
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+            tvEmail.setText(firebaseUser.getEmail());
+            tvName.setText(firebaseUser.getDisplayName());
+            Glide.with(header.getContext()).load(firebaseUser.getPhotoUrl()).into(civAvatar);
+        }
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 }

@@ -12,7 +12,7 @@ public class Constant {
     public static final String CHILD_CHATONETOONE= "chat_onetoone";
     public static final String CHILD_FRIENDLISTS="friend_lists";
     public static final String CHILD_GROUPCHAT= "group_chats";
-
+    public static final String CHILD_TIMELINE= "timeline";
     public static final String CHILD_USERS_UID_CONNECTION="connection";
     public static final String CHILD_USERS_UID_LASTONLINE="lastOnline";
 

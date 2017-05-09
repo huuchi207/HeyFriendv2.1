@@ -3,6 +3,7 @@ package common;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -13,11 +14,13 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 
 
-public class MessageViewHolder extends RecyclerView.ViewHolder  implements View.OnCreateContextMenuListener {
+public class MessageViewHolder extends RecyclerView.ViewHolder
+        implements View.OnCreateContextMenuListener {
     public TextView tvMessage;
     public TextView tvDateSending;
     public CircleImageView ivMessenger;
-    public LinearLayout linearLayout, llAllComponent;
+    public LinearLayout linearLayout, llAllComponent, llContentMsg;
+    public ImageView ivPhoto;
     public int DELETE= 3;
     public int COPY= 2;
 
@@ -28,6 +31,8 @@ public class MessageViewHolder extends RecyclerView.ViewHolder  implements View.
         ivMessenger = (CircleImageView) itemView.findViewById(R.id.ivMessenger);
         linearLayout= (LinearLayout) itemView.findViewById(R.id.llOneToOneChat);
         llAllComponent =(LinearLayout) itemView.findViewById(R.id.llAllComponent);
+        ivPhoto = (ImageView) itemView.findViewById(R.id.ivPhoto);
+        llContentMsg = (LinearLayout) itemView.findViewById(R.id.llContentMsg);
         v.setOnCreateContextMenuListener(this);
 
     }

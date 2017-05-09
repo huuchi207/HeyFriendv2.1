@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.percent.PercentRelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="160dp"
+    android:background="@color/colorPrimary"
+    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        app:layout_marginLeftPercent ="5%"
+        android:gravity="bottom"
+        android:id="@+id/leftLayout_navHeaderMain"
+        android:orientation="vertical">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/ivAvatar_NavHeaderMain"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            />
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Guest"
+                    android:textColor="@android:color/white"
+                    android:id="@+id/tvName_NavHeaderMain"
+                    android:textStyle="bold"
+                    android:textSize="14sp"
+                    android:layout_marginBottom="3dp"
+                    />
+                <TextView
+                    android:id="@+id/tvEmail_NavHeaderMain"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/white"
+                    android:text="android.studio@android.com"
+                    android:textSize="14sp"
+                    android:layout_marginBottom="3dp"
+                    />
+            </LinearLayout>
+
+        </RelativeLayout>
+    </LinearLayout>
+</android.support.percent.PercentRelativeLayout>
