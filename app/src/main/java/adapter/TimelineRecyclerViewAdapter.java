@@ -2,6 +2,7 @@ package adapter;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.chi.heyfriendv21.R;
+import com.chi.heyfriendv21.activity.PostActivity;
 
 import java.util.List;
 
@@ -25,10 +27,6 @@ import object.Post;
 public class TimelineRecyclerViewAdapter extends
         RecyclerView.Adapter<TimelineRecyclerViewAdapter.ViewHolder> {
     private List<Post> list;
-    private final int LOCKED = 1;
-    private final int UNLOCKED = 0;
-    private final int PREMIUM = 2;
-    private final int COMPLETED = 3;
     private static Context context;
     private ViewHolder viewHolder;
     private Fragment parentFragment;
@@ -63,7 +61,7 @@ public class TimelineRecyclerViewAdapter extends
     public void onBindViewHolder(final ViewHolder viewHolder,
                                  final int position) {
         viewHolder.setIsRecyclable(false);
-        Post post = list.get(position);
+        final Post post = list.get(position);
         viewHolder.tvName.setText(post.getName());
         viewHolder.tvContent.setText(post.getContent());
         viewHolder.tvTime.setText(CommonMethod.diffTime(context, post.getTime()));
@@ -72,6 +70,15 @@ public class TimelineRecyclerViewAdapter extends
             viewHolder.ivImage.setVisibility(View.GONE);
         }
         else Glide.with(context).load(post.getUrlImage()).into(viewHolder.ivImage);
+
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, PostActivity.class);
+                intent.putExtra("data", post);
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override

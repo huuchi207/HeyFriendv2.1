@@ -158,7 +158,8 @@ public class GroupConversationActivity extends AppCompatActivity implements
 
 //        getClientInfo();
         CommonMethod.updateOnlineState(myUid, databaseReference);
-        groupMessagesForRecyclerViewAdapter = new GroupMessagesForRecyclerViewAdapter(Message.class,
+        groupMessagesForRecyclerViewAdapter = new GroupMessagesForRecyclerViewAdapter
+                (Message.class,
                 R.layout.item_message_onetoone,
                 MessageViewHolder.class,
                 databaseReference.child(Constant.CHILD_GROUPCHAT).child(groupChatData.getUid()).child(Constant.KEY_MESSAGES).getRef(),

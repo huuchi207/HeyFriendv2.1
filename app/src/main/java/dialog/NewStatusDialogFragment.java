@@ -119,6 +119,7 @@ public class NewStatusDialogFragment extends DialogFragment {
             imageBitmap= (Bitmap) extras.get("data");
             //show image
             ivImage.setImageBitmap(imageBitmap);
+            llAddImage.setVisibility(View.GONE);
             ivClearImage.setVisibility(View.VISIBLE);
         }
     }

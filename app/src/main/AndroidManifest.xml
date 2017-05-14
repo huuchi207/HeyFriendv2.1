@@ -49,6 +49,10 @@
             android:theme="@style/AppTheme.ThemeForLoginScreen">
 
         </activity>
+        <activity android:name=".activity.PostActivity"
+            android:theme="@style/AppTheme.ThemeForLoginScreen">
+
+        </activity>
     </application>
 
 
