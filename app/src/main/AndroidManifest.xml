@@ -20,11 +20,7 @@
             android:name=".activity.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".activity.LoginActivity"
@@ -48,6 +44,15 @@
         <activity android:name=".activity.GroupConversationActivity"
             android:theme="@style/AppTheme.ThemeForLoginScreen">
 
+        </activity>
+
+        <activity android:name=".activity.ProfileActivity"
+            android:theme="@style/AppTheme.ThemeForLoginScreen">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 

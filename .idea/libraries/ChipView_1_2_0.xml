@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="ChipView-1.2.0">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.android/build-cache/0e81c6f9621a8711335e9066cb850101d2e5ef4d/output/res" />
+      <root url="jar://$USER_HOME$/.android/build-cache/0e81c6f9621a8711335e9066cb850101d2e5ef4d/output/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.Plumillon/ChipView/1.2.0/5955c3ef2259bb28570c94d322df4fef48af7755/ChipView-1.2.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
