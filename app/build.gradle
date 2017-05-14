@@ -76,11 +76,10 @@ dependencies {
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'com.github.Plumillon:ChipView:1.2.0'
     compile "com.splitwise:tokenautocomplete:2.0.8@aar"
-
-
     //collapse fab
     compile 'com.getbase:floatingactionbutton:1.10.1'
-
+    //like button
+    compile 'com.github.jd-alexander:LikeButton:0.2.1'
     testCompile 'junit:junit:4.12'
 }
 

@@ -8,7 +8,7 @@
     <string name="invite_friend_facebook">Invite Friend Facebook</string>
     <string name="txt_private_chat">Private</string>
     <string name="txt_group_chat">Group</string>
-    <string name="txt_enter_message">Enter message</string>
+    <string name="txt_enter_message">Enter content</string>
     <string name="txt_state">Last seen </string>
     <string name="txt_you">You</string>
     <string name="txt_seconds_ago">seconds ago</string>
@@ -16,14 +16,14 @@
     <string name="txt_hours_ago">hours ago</string>
     <string name="txt_about">about</string>
     <string name="txt_days_ago">days ago</string>
-    <string name="announce_cant_send_msg">Can\'t send message!</string>
-    <string name="announce_empty_msg">Empty message!</string>
-    <string name="announce_cant_delete_msg">Can\'t delete message!</string>
+    <string name="announce_cant_send_msg">Can\'t send content!</string>
+    <string name="announce_empty_msg">Empty content!</string>
+    <string name="announce_cant_delete_msg">Can\'t delete content!</string>
     <string name="announce_msg_is_deleted">Message is deleted!</string>
     <string name="name">Name</string>
     <string name="txt_send_friend_request">Send a friend request</string>
     <string name="txt_remove_friend">Remove friend</string>
-    <string name="txt_send_message">Send message</string>
+    <string name="txt_send_message">Send content</string>
     <string name="txt_date_of_birth">Date of birth</string>
     <string name="txt_gender">Gender</string>
     <string name="txt_male">Male</string>
@@ -32,7 +32,7 @@
     <string name="txt_invitation_msg_example">Hey, May I become your friend?</string>
     <string name="txt_cancel">Cancel</string>
     <string name="announce_cant_send_invitation">Can\'t send invitation!</string>
-    <string name="announce_invitation_msg_is_sent">Invitation message is sent!</string>
+    <string name="announce_invitation_msg_is_sent">Invitation content is sent!</string>
     <string name="txt_search_friend">Search friend</string>
     <string name="announce_friend_is_removed">The friend is removed!</string>
     <string name="announce_database_has_problem">Database has problem!</string>
@@ -41,9 +41,9 @@
     <string name="txt_send_invitation">Send invitation</string>
     <string name="txt_block_user">Block user</string>
     <string name="announce_cant_remove_this_friend">Can\'t remove this friend!</string>
-    <string name="announce_cant_delete_invitation_message">Can\'t delete invitation message!</string>
+    <string name="announce_cant_delete_invitation_message">Can\'t delete invitation content!</string>
     <string name="announce_add_friend_successfully">Add friend successfully</string>
-    <string name="announce_invitation_msg_is_deleted">Invitation message is deleted</string>
+    <string name="announce_invitation_msg_is_deleted">Invitation content is deleted</string>
     <string name="announce_cant_delete_this_conversation">Cant delete this conversation!</string>
     <string name="announce_this_conversation_is_deleted">This conversation is deleted</string>
     <string name="txt_enter_name">Enter name</string>
@@ -68,7 +68,7 @@
     <string name="txt_pick_your_birthday">Pick your birthday</string>
     <string name="txt_update">Update</string>
     <string name="announce_invalid_date_of_birth">Invalid date of birth format</string>
-    <string name="text_there_is_no_invitation_message">There is no invitation message.</string>
+    <string name="text_there_is_no_invitation_message">There is no invitation content.</string>
     <string name="txt_list_participants">List participants</string>
     <string name="announce_leave_group">Do you really want to leave this group?</string>
     <string name="txt_ok">OK</string>
@@ -93,4 +93,7 @@
     <string name="txt_have_something_new">Have something new?</string>
     <string name="txt_post">Post</string>
     <string name="txt_write_something">Write something...</string>
+    <string name="txt_take_a_comment">Take a comment</string>
+    <string name="txt_comments">comments</string>
+    <string name="txt_likes">likes</string>
 </resources>
