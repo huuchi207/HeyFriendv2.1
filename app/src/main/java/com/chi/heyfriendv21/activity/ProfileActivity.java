@@ -32,6 +32,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        
         tvNumber1 = (TextView) findViewById(R.id.tvNumber1);
         tvNumber1.setSelected(true);
         btnEdit1 = (Button) findViewById(R.id.btn_edit_info1);
