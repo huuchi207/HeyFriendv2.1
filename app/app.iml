@@ -156,6 +156,7 @@
     <orderEntry type="library" exported="" name="firebase-client-android-2.3.1" level="project" />
     <orderEntry type="library" exported="" name="transition-25.2.0" level="project" />
     <orderEntry type="library" exported="" name="bolts-tasks-1.4.0" level="project" />
+    <orderEntry type="library" exported="" name="LikeButton-0.2.1" level="project" />
     <orderEntry type="library" exported="" name="constraint-layout-1.0.0-alpha7" level="project" />
     <orderEntry type="library" exported="" name="firebase-database-connection-10.2.1" level="project" />
     <orderEntry type="library" exported="" name="firebase-iid-10.2.1" level="project" />

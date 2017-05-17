@@ -12,6 +12,15 @@
     </item>
     <item
         is-multidex="true"
+        jar="C:\Users\MyPC\.android\build-cache\121e828a51b4d7716a8f6443d46d916117e9483c\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="9048a9e4798a71fe8e62e4a049eeb9ccb24010cb">
+        <dex dex="E:\Hieu\Documents\Hoc lieu\LT nhung - android\New Hey Friend\HeyFriendv2.1\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_a5548bc13c7bb655e75f64bb0dcf1793956be678\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
         jar="E:\Hieu\Documents\Hoc lieu\LT nhung - android\New Hey Friend\HeyFriendv2.1\app\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
         jumboMode="true"
         optimize="true"

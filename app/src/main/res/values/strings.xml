@@ -67,6 +67,7 @@
     <string name="announce_fill_in_the_blank">Fill your name in the blank!</string>
     <string name="txt_pick_your_birthday">Pick your birthday</string>
     <string name="txt_update">Update</string>
+    <string name="txt_save_info">Save</string>
     <string name="announce_invalid_date_of_birth">Invalid date of birth format</string>
     <string name="text_there_is_no_invitation_message">There is no invitation content.</string>
     <string name="txt_list_participants">List participants</string>
@@ -96,4 +97,7 @@
     <string name="txt_take_a_comment">Take a comment</string>
     <string name="txt_comments">comments</string>
     <string name="txt_likes">likes</string>
+    <string name="txt_edit">Edit</string>
+    <string name="txt_gender_selection">Gender Selection</string>
+    <string name="txt_name">Name</string>
 </resources>

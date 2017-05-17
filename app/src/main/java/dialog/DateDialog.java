@@ -7,15 +7,20 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import java.util.Calendar;
 
 
 
 public class DateDialog extends DialogFragment implements DatePickerDialog.OnDateSetListener {
-    EditText editDate;
+    private TextView tvDate;
     public DateDialog(View view){
-        editDate = (EditText) view;
+        tvDate = (TextView) view;
+    }
+
+    public DateDialog() {
+
     }
     public Dialog onCreateDialog(Bundle savedInstanceState){
         final Calendar c = Calendar.getInstance();
@@ -26,6 +31,6 @@ public class DateDialog extends DialogFragment implements DatePickerDialog.OnDat
     }
     public void onDateSet(DatePicker view, int year, int month, int day){
         String date = day+"-"+(month+1)+"-"+year;
-        editDate.setText(date);
+        tvDate.setText(date);
     }
 }

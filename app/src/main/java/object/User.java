@@ -17,7 +17,6 @@ public class User implements Serializable {
     private long lastOnline;
     private boolean connection;
     private String dateOfBirth;
-
     private int gender;
 
 
